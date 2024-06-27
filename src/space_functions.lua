@@ -7,6 +7,7 @@ local menu = {
     ['5'] = {method = 'InsertCurrentDate', desc = '日付と曜日を挿入する'},
     ['6'] = {method = 'SetColorScheme', desc = 'テーマの変更（GUI限定）'},
     ['7'] = {method = 'CopyMessagesToClipboard', desc = ':messagesの内容をクリップボードにコピー'},
+    ['8'] = {method = 'ExecuteTelescope', desc = 'Telescope'},
     ['y'] = {method = 'SetClipboard', desc = 'クリップボードにコピー'},
     ['p'] = {method = 'PasteClipboard', desc = 'クリップボードを貼り付け'}
 }
@@ -84,7 +85,7 @@ function OpenVimrc()
     local fileList = {
         vim.g.user_vim_dir .. '/init.lua',
         vim.g.user_vim_dir .. '/src/ginit.lua',
-        vim.g.user_vim_dir .. '/src/space_functions.vim',
+        vim.g.user_vim_dir .. '/src/space_functions.lua',
     }
     local result = ReturnUserSelected(fileList)
     if result ~= nil then
@@ -181,6 +182,10 @@ function CopyMessagesToClipboard()
     -- Set the messages to the clipboard
     vim.fn.setreg('+', messages)
     print("Messages copied to clipboard")
+end
+
+function ExecuteTelescope()
+    vim.cmd('Telescope')
 end
 
 -- Spaceキーにメニュー表示関数をマッピング
