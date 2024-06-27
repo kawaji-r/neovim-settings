@@ -39,6 +39,10 @@ vim.api.nvim_set_keymap('n', '<A-j>', '<C-w>j', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-h>', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-k>', '<C-w>k', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', {noremap = true})
+vim.api.nvim_set_keymap('n', '<A-right>', '<C-w>>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<A-left>', '<C-w><', {noremap = true})
+vim.api.nvim_set_keymap('n', '<A-up>', '<C-w>-', {noremap = true})
+vim.api.nvim_set_keymap('n', '<A-down>', '<C-w>+', {noremap = true})
 vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true})
 -- Esc SETTINGS
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true})
@@ -67,12 +71,6 @@ vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/space_functions.lua')
 -- ------------------- / 外部ファイル読み込み -------------------
 
 -- -------------------- VimEnter設定（スクリプト読込後に実施） --------------------
--- ランダムでcolorを設定
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        SetColorScheme()
-    end
-})
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
         vim.api.nvim_command("colorscheme peachpuff") -- 気に入ったため
@@ -158,3 +156,4 @@ end
 if vim.fn.has("gui_running") == 1 then
     vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/ginit.lua')
 end
+

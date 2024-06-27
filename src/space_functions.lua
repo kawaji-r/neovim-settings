@@ -45,14 +45,13 @@ function ShowMenu()
     -- ユーザーの入力を待つ
     local user_input = vim.fn.nr2char(vim.fn.getchar())
     vim.o.cmdheight = cmdheight
-    local function_name = vim.g.menuList[user_input].method
 
     -- 選択されたメニュー項目の実行
     if vim.g.menuList[user_input] then
         if vim.fn.exists('*' .. vim.g.menuList[user_input].method) == 1 then
             vim.cmd('call ' .. vim.g.menuList[user_input].method .. '()')
-        elseif _G[function_name] ~= nil then
-            _G[function_name]()  -- グローバルテーブルから関数を呼び出す
+        elseif _G[vim.g.menuList[user_input].method] ~= nil then
+            _G[vim.g.menuList[user_input].method]()  -- グローバルテーブルから関数を呼び出す
         else
             print('関数がありません／' .. vim.g.menuList[user_input].method)
         end
@@ -84,7 +83,7 @@ function OpenVimrc()
     -- ファイル選択リストの設定
     local fileList = {
         vim.g.user_vim_dir .. '/init.lua',
-        vim.g.user_vim_dir .. '/ginit.lua',
+        vim.g.user_vim_dir .. '/src/ginit.lua',
         vim.g.user_vim_dir .. '/src/space_functions.vim',
     }
     local result = ReturnUserSelected(fileList)
@@ -95,18 +94,37 @@ end
 
 -- Fernをトグルする関数
 function OpenTree()
-    -- ディレクトリ選択リストの設定
-    local dirList = {'現在のファイルのパス', vim.g.user_vim_dir}
-    if vim.g.fernList and not vim.tbl_isempty(vim.g.fernList) then
-        vim.list_extend(dirList, vim.g.fernList)
+    local fern_win_id = -1
+    -- 既にウィンドウが開かれているかを確認
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+        if filetype == "fern" then
+            fern_win_id = win
+            break
+        end
     end
-    local result = ReturnUserSelected(dirList)
-    if result == '現在のファイルのパス' then
-        vim.cmd('Fern %:h -reveal=% -drawer -width=35')
+    if fern_win_id ~= -1 then
+        -- 開いていれば閉じる
+        vim.api.nvim_win_close(fern_win_id, true)
         return
-    end
-    if result ~= nil then
-        vim.cmd('Fern ' .. result .. ' -drawer -toggle -width=35')
+    else
+        -- 開いていないため、開くための処理
+        -- ディレクトリ選択リストの設定
+        local dirList = {'現在のファイルのパス', vim.g.user_vim_dir}
+        if vim.g.fernList and not vim.tbl_isempty(vim.g.fernList) then
+            vim.list_extend(dirList, vim.g.fernList)
+        end
+        local result = ReturnUserSelected(dirList)
+        if result == '現在のファイルのパス' then
+            vim.cmd('Fern %:h -reveal=% -drawer -width=35')
+            vim.cmd('cd %:h')
+            return
+        end
+        if result ~= nil then
+            vim.cmd('Fern ' .. result .. ' -drawer -toggle -width=35')
+            vim.cmd('cd ' .. result)
+        end
     end
 end
 
@@ -151,10 +169,10 @@ function ReturnUserSelected(array)
 
     -- ユーザーの入力に基づいてディレクトリを開く
     local user_input = tonumber(vim.fn.nr2char(vim.fn.getchar()))
-    if user_input >= 1 and user_input <= #array then
-        return array[user_input]
+    if user_input and user_input >= 1 and user_input <= #array then
+        return array[tonumber(user_input)]
     else
-        print('そのキーは設定されていません／' .. user_input)
+        print('そのキーは設定されていません／' .. tostring(user_input))
         return nil
     end
 end
