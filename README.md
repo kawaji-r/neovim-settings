@@ -1,5 +1,5 @@
 ## Install
-git clone git@github.com:kawaji-r/vim-settings.git ~/.config/nvim
+git clone git@github.com:kawaji-r/neovim-settings.git ~/.config/nvim
 
 ## Structure
 * init.lua・・・設定ファイル

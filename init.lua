@@ -156,4 +156,3 @@ end
 if vim.fn.has("gui_running") == 1 then
     vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/ginit.lua')
 end
-
