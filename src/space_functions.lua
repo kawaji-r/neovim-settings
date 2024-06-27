@@ -118,12 +118,10 @@ function OpenTree()
         local result = ReturnUserSelected(dirList)
         if result == '現在のファイルのパス' then
             vim.cmd('Fern %:h -reveal=% -drawer -width=35')
-            vim.cmd('cd %:h')
             return
         end
         if result ~= nil then
             vim.cmd('Fern ' .. result .. ' -drawer -toggle -width=35')
-            vim.cmd('cd ' .. result)
         end
     end
 end
