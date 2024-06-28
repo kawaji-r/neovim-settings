@@ -8,6 +8,7 @@ local menu = {
     ['6'] = {method = 'SetColorScheme', desc = 'テーマの変更（GUI限定）'},
     ['7'] = {method = 'CopyMessagesToClipboard', desc = ':messagesの内容をクリップボードにコピー'},
     ['8'] = {method = 'ExecuteTelescope', desc = 'Telescope'},
+    ['9'] = {method = 'OpenTerminal', desc = '下半分にターミナルを表示'},
     ['y'] = {method = 'SetClipboard', desc = 'クリップボードにコピー'},
     ['p'] = {method = 'PasteClipboard', desc = 'クリップボードを貼り付け'}
 }
@@ -186,6 +187,10 @@ end
 
 function ExecuteTelescope()
     vim.cmd('Telescope')
+end
+
+function OpenTerminal()
+    vim.cmd('belowright new |resize 15 | terminal')
 end
 
 -- Spaceキーにメニュー表示関数をマッピング

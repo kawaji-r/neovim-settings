@@ -48,6 +48,8 @@ vim.api.nvim_set_keymap('n', '<A-down>', '<C-w>+', {noremap = true})
 vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true})
 -- Esc SETTINGS
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true})
+-- ターミナルにてESCキーでインサートモード解除
+vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', {noremap = true})
 -- ------------------- / シンプルMAP -------------------
 
 -- -------------------- BK設定 --------------------
@@ -73,9 +75,16 @@ vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/space_functions.lua')
 -- ------------------- / 外部ファイル読み込み -------------------
 
 -- -------------------- VimEnter設定（スクリプト読込後に実施） --------------------
+-- カラーテーマ設定
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
         vim.api.nvim_command("colorscheme peachpuff") -- 気に入ったため
+    end
+})
+-- ターミナルを開いたら入力モードに
+vim.api.nvim_create_autocmd("TermOpen", {
+    callback = function()
+        vim.cmd("startinsert")
     end
 })
 -- ------------------- / VimEnter設定 -------------------
