@@ -78,7 +78,8 @@ vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/space_functions.lua')
 -- カラーテーマ設定
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
-        vim.api.nvim_command("colorscheme peachpuff") -- 気に入ったため
+        vim.opt.background = 'light'
+        vim.api.nvim_command("colorscheme everforest")
     end
 })
 -- ターミナルを開いたら入力モードに
@@ -124,19 +125,6 @@ function VisualSearch()
     vim.opt.hlsearch = true
     -- 最初の一致に移動
     vim.cmd('normal! n')
-end
-
--- ランダムに色スキームを選択して適用する関数
-function SetColorScheme()
-    -- 色スキームのリストを定義
-    local colorschemes = {
-        'blue', 'darkblue', 'delek', 'desert', 'elflord', 
-        'evening', 'industry', 'koehler', 'morning', 'murphy', 'pablo', 
-        'peachpuff', 'ron', 'slate', 'torte', 'zellner'
-    }
-    -- 'shine', 'default'
-    local index = tonumber(vim.fn.matchstr(vim.fn.reltimestr(vim.fn.reltime()), '\\v\\d+')) % #colorschemes + 1
-    vim.api.nvim_command('color ' .. colorschemes[index])
 end
 -- ------------------- / 関数定義 -------------------
 
