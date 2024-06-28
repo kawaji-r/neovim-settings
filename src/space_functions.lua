@@ -9,6 +9,7 @@ local menu = {
     ['7'] = {method = 'CopyMessagesToClipboard', desc = ':messagesの内容をクリップボードにコピー'},
     ['8'] = {method = 'ExecuteTelescope', desc = 'Telescope'},
     ['9'] = {method = 'OpenTerminal', desc = '下半分にターミナルを表示'},
+    ['q'] = {method = 'ToggleBackground', desc = 'ダークテーマとライトテーマ入れ替え'},
     ['y'] = {method = 'SetClipboard', desc = 'クリップボードにコピー'},
     ['p'] = {method = 'PasteClipboard', desc = 'クリップボードを貼り付け'}
 }
@@ -177,6 +178,20 @@ function ReturnUserSelected(array)
     end
 end
 
+-- ランダムに色スキームを選択して適用する関数
+function SetColorScheme()
+    -- 色スキームのリストを定義
+    local colorschemes = {
+        'blue', 'darkblue', 'delek', 'desert', 'elflord', 
+        'evening', 'industry', 'koehler', 'morning', 'murphy', 'pablo', 
+        'peachpuff', 'ron', 'slate', 'torte', 'zellner', 'everforest'
+    }
+    -- 'shine', 'default'
+    local index = tonumber(vim.fn.matchstr(vim.fn.reltimestr(vim.fn.reltime()), '\\v\\d+')) % #colorschemes + 1
+    vim.api.nvim_command('color ' .. colorschemes[index])
+    print('New Theme is: ' .. colorschemes[index])
+end
+
 function CopyMessagesToClipboard()
     -- Get the messages
     local messages = vim.fn.execute('messages')
@@ -191,6 +206,14 @@ end
 
 function OpenTerminal()
     vim.cmd('belowright new |resize 15 | terminal')
+end
+
+function ToggleBackground()
+    if vim.o.background == "dark" then
+        vim.o.background = "light"
+    else
+        vim.o.background = "dark"
+    end
 end
 
 -- Spaceキーにメニュー表示関数をマッピング

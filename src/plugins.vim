@@ -10,6 +10,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'sainnhe/everforest' " テーマ追加
 Plug 'lambdalisue/fern.vim' " ファイラー
 Plug 'lambdalisue/fern-renderer-nerdfont.vim'
 " Plug 'ctrlpvim/ctrlp.vim' " ファイル検索
