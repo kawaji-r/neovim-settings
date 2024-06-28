@@ -29,7 +29,7 @@ function! s:fern_mappings()
   nmap <buffer> cd <Plug>(fern-action-cd)
   nmap <buffer> cp <Plug>(fern-action-copy)
 endfunction
-
+let g:fern#default_hidden = 1
 " ------------------- / 個別設定:Fern -------------------
 
 " -------------------   個別設定:Telescope -------------------
