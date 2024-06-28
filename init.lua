@@ -26,6 +26,8 @@ vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.showtabline = 2
 vim.opt.ignorecase = false
+-- 日本語の幅がおかしいため、設定
+vim.opt.ambiwidth = 'double'
 -- タブや改行を表示 (list:表示)
 vim.opt.list = true
 -- どの文字でタブや改行を表示するかを設定
