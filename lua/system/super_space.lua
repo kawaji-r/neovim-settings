@@ -1,6 +1,8 @@
+local mod = require("system.functions")
+
 -- メニュー項目の設定
 local menu = {
-    ['1'] = {method = nil, desc = 'ファイルを開く'},
+    [' '] = {method = nil, desc = '次の機能を見る'},
     ['2'] = {method = 'OpenVimrc', desc = 'vim設定ファイルを開く'},
     ['3'] = {method = 'OpenTree', desc = 'Fernを開く'},
     ['4'] = {method = 'RecentFile', desc = '最近開いたファイルを開く'},
@@ -15,9 +17,9 @@ local menu = {
 }
 
 -- ユーザー定義辞書とマージ
-if vim.g.menuList and not vim.tbl_isempty(vim.g.menuList) then
+if vim.g.menu_list and not vim.tbl_isempty(vim.g.menu_list) then
     -- 辞書マージ用関数
-    local function MergeDicts(dict1, dict2)
+    local function merge_dicts(dict1, dict2)
         local result = vim.deepcopy(dict1)
         for key, value in pairs(dict2) do
             result[key] = value
@@ -25,78 +27,44 @@ if vim.g.menuList and not vim.tbl_isempty(vim.g.menuList) then
         return result
     end
 
-    menu = MergeDicts(vim.g.menuList, menu)
+    menu = merge_dicts(vim.g.menu_list, menu)
 end
 
-vim.g.menuList = menu
-
--- 配列を受け取って表示する
-local function display_info_list(info_list)
-    -- 元のコマンドラインサイズを記憶
-    local cmdheight = vim.o.cmdheight
-    -- コマンドラインサイズを一時的に変更
-    vim.o.cmdheight = #info_list + 2
-    -- 情報表示
-    print('■■■■■■■■■■■■■■■■■■■■')
-    for _, key in ipairs(info_list) do
-        print(key .. ': ' .. vim.g.menuList[key].desc)
-    end
-    print('■■■■■■■■■■■■■■■■■■■■')
-    -- 元のコマンドラインサイズに戻す
-    vim.o.cmdheight = cmdheight
-end
+vim.g.menu_list = menu
 
 -- メニューを表示してユーザー入力に応じたアクションを実行する関数
-function ShowMenu()
+function ShowMenu(menu_list)
     -- メニュー表示
-    local menu_list = vim.tbl_keys(vim.g.menuList)
+    menu_list = vim.tbl_keys(menu_list)
     table.sort(menu_list)
-    display_info_list(menu_list)
+    mod.display_info_list(menu_list)
 
     -- ユーザーの入力を待つ
     local user_input = vim.fn.nr2char(vim.fn.getchar())
 
     -- 選択されたメニュー項目の実行
-    if vim.g.menuList[user_input] then
-        if vim.fn.exists('*' .. vim.g.menuList[user_input].method) == 1 then
-            vim.cmd('call ' .. vim.g.menuList[user_input].method .. '()')
-        elseif _G[vim.g.menuList[user_input].method] ~= nil then
-            _G[vim.g.menuList[user_input].method]()  -- グローバルテーブルから関数を呼び出す
+    if vim.g.menu_list[user_input] then
+        if vim.fn.exists('*' .. vim.g.menu_list[user_input].method) == 1 then
+            vim.cmd('call ' .. vim.g.menu_list[user_input].method .. '()')
+        elseif _G[vim.g.menu_list[user_input].method] ~= nil then
+            _G[vim.g.menu_list[user_input].method]()  -- グローバルテーブルから関数を呼び出す
         else
-            print('関数がありません／' .. vim.g.menuList[user_input].method)
+            print('関数がありません／' .. vim.g.menu_list[user_input].method)
         end
     else
         print('そのキーは設定されていません／' .. user_input)
     end
 end
 
--- 現在のモードが引数に指定されたモードのいずれかであるかを判定する関数
-local function IsCurrentMode(modes)
-    local current_mode = vim.fn.mode()
-    for _, mode in ipairs(modes) do
-        -- 各モードと現在のモードを比較
-        if mode == 'insert' and current_mode:match('^[iR]') then
-            return true
-        elseif mode == 'normal' and (current_mode == '' or current_mode == 'c' or current_mode == 'n') then
-            return true
-        elseif mode == 'visual' and current_mode:match('^v') then
-            return true
-        else
-            error('Unknown mode: ' .. mode)
-        end
-    end
-    return false
-end
-
 -- Vim設定ファイルを開くための関数
 function OpenVimrc()
     -- ファイル選択リストの設定
     local fileList = {
-        vim.g.user_vim_dir .. '/init.lua',
-        vim.g.user_vim_dir .. '/src/ginit.lua',
-        vim.g.user_vim_dir .. '/src/space_functions.lua',
+        vim.fn.stdpath("config") .. '/init.lua',
+        vim.fn.stdpath("config") .. '/src/ginit.lua',
+        vim.fn.stdpath("config") .. '/src/space_functions.lua',
     }
-    local result = ReturnUserSelected(fileList)
+    local result = mod.ReturnUserSelected(fileList)
     if result ~= nil then
         vim.cmd(':tabe ' .. result)
     end
@@ -121,11 +89,11 @@ function OpenTree()
     else
         -- 開いていないため、開くための処理
         -- ディレクトリ選択リストの設定
-        local dirList = {'現在のファイルのパス', vim.g.user_vim_dir}
+        local dirList = {'現在のファイルのパス', vim.fn.stdpath("config")}
         if vim.g.fernList and not vim.tbl_isempty(vim.g.fernList) then
             vim.list_extend(dirList, vim.g.fernList)
         end
-        local result = ReturnUserSelected(dirList)
+        local result = mod.ReturnUserSelected(dirList)
         if result == '現在のファイルのパス' then
             vim.cmd('Fern %:h -reveal=% -drawer -width=35')
             return
@@ -152,37 +120,12 @@ end
 
 -- 選択されたテキストをクリップボードにコピーする関数
 function SetClipboard()
-    vim.cmd('normal! gv"+y')
+    mod.set_clipboard()
 end
 
 -- クリップボードの内容を貼り付ける関数
 function PasteClipboard()
-    vim.cmd('normal "+P')
-end
-
-function ReturnUserSelected(array)
-    vim.cmd('redraw')
-
-    local cmdheight = vim.o.cmdheight
-    vim.o.cmdheight = #array + 4
-
-    print('-------------------------------------------')
-    print('選択してください')
-    for i, item in ipairs(array) do
-        print(i .. ': ' .. item)
-    end
-    print('-------------------------------------------')
-
-    vim.o.cmdheight = cmdheight
-
-    -- ユーザーの入力に基づいてディレクトリを開く
-    local user_input = tonumber(vim.fn.nr2char(vim.fn.getchar()))
-    if user_input and user_input >= 1 and user_input <= #array then
-        return array[tonumber(user_input)]
-    else
-        print('そのキーは設定されていません／' .. tostring(user_input))
-        return nil
-    end
+    mod.paste_clipboard()
 end
 
 -- ランダムに色スキームを選択して適用する関数
@@ -258,5 +201,6 @@ function ToggleBackground()
 end
 
 -- Spaceキーにメニュー表示関数をマッピング
-vim.api.nvim_set_keymap('n', '<Space>', ':lua ShowMenu()<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('v', '<Space>', ':<C-u>lua ShowMenu()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Space>', ':lua ShowMenu(vim.g.menu_list)<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('v', '<Space>', ':<C-u>lua ShowMenu(vim.g.menu_list)<CR>', {noremap = true, silent = true})
+

@@ -1,0 +1,14 @@
+{
+  "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
+  "fern-renderer-nerdfont.vim": { "branch": "master", "commit": "325629c68eb543229715b68920fbcb92b206beb6" },
+  "fern.vim": { "branch": "main", "commit": "60d9a56380123198fe318c250d29a4a44bb952e9" },
+  "glyph-palette.vim": { "branch": "master", "commit": "1ee16c232c5538f34bb47c3dd0f6b369fdd7c555" },
+  "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "1a31f824b9cd5bc6f342fc29e9a53b60d74af245" },
+  "mason.nvim": { "branch": "main", "commit": "fc98833b6da5de5a9c5b1446ac541577059555be" },
+  "nerdfont.vim": { "branch": "master", "commit": "3605ba4ba4dc0295f5eb400506fd05b451df3e1f" },
+  "nvim-lspconfig": { "branch": "master", "commit": "8a1529e46eef5efc86c34c8d9bdd313abc2ecba0" },
+  "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
+  "telescope.nvim": { "branch": "master", "commit": "814f102cd1da3dc78c7d2f20f2ef3ed3cdf0e6e4" },
+  "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" }
+}
