@@ -27,11 +27,11 @@ vim.opt.tabstop = 4
 vim.opt.showtabline = 2
 vim.opt.ignorecase = false
 -- 日本語の幅がおかしいため、設定
-vim.opt.ambiwidth = 'double'
+-- vim.opt.ambiwidth = 'double'
 -- タブや改行を表示 (list:表示)
 vim.opt.list = true
 -- どの文字でタブや改行を表示するかを設定
-vim.opt.listchars = 'tab:>-,extends:<,trail:-,eol:~'
+vim.opt.listchars = 'tab:>-,extends:<,trail:-,eol:↩'
 vim.opt.display:append("lastline")
 -- ------------------- / シンプル設定 -------------------
 
@@ -50,6 +50,8 @@ vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true})
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true})
 -- ターミナルにてESCキーでインサートモード解除
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', {noremap = true})
+-- カラー設定
+vim.api.nvim_command("colorscheme peachpuff")
 -- ------------------- / シンプルMAP -------------------
 
 -- -------------------- BK設定 --------------------
@@ -62,33 +64,6 @@ vim.opt.directory = vim.g.BK
 vim.opt.backupdir = vim.g.BK
 vim.opt.undodir = vim.g.BK
 -- ------------------- / BK設定 -------------------
-
--- -------------------- 外部ファイル読み込み --------------------
--- ユーザーファイル読み込み
-local files = vim.fn.globpath(vim.g.user_vim_dir .. '/user_src', "*.{vim,lua}", false, true)
-for _, file in ipairs(files) do
-    vim.cmd('source ' .. file)
-end
-
--- Spaceのマッピングを外部ファイルで定義
-vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/space_functions.lua')
--- ------------------- / 外部ファイル読み込み -------------------
-
--- -------------------- VimEnter設定（スクリプト読込後に実施） --------------------
--- カラーテーマ設定
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        vim.opt.background = 'light'
-        vim.api.nvim_command("colorscheme everforest")
-    end
-})
--- ターミナルを開いたら入力モードに
-vim.api.nvim_create_autocmd("TermOpen", {
-    callback = function()
-        vim.cmd("startinsert")
-    end
-})
--- ------------------- / VimEnter設定 -------------------
 
 -- -------------------- 関数定義 --------------------
 -- ファイルをechoする
@@ -155,3 +130,14 @@ end
 if vim.fn.has("gui_running") == 1 then
     vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/ginit.lua')
 end
+
+-- -------------------- 外部ファイル読み込み --------------------
+-- Spaceのマッピングを外部ファイルで定義
+vim.cmd('source ' .. vim.g.user_vim_dir .. '/src/space_functions.lua')
+
+-- ユーザー定義ファイル読み込み
+local files = vim.fn.globpath(vim.g.user_vim_dir .. '/user_src', "*.{vim,lua}", false, true)
+for _, file in ipairs(files) do
+    vim.cmd('source ' .. file)
+end
+-- ------------------- / 外部ファイル読み込み -------------------

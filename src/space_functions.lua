@@ -30,24 +30,31 @@ end
 
 vim.g.menuList = menu
 
--- メニューを表示してユーザー入力に応じたアクションを実行する関数
-function ShowMenu()
+-- 配列を受け取って表示する
+local function display_info_list(info_list)
+    -- 元のコマンドラインサイズを記憶
     local cmdheight = vim.o.cmdheight
-
-    local sortedKeys = vim.tbl_keys(vim.g.menuList)
-    table.sort(sortedKeys)
-
-    -- メニューの表示
-    vim.o.cmdheight = #vim.g.menuList + 3
-    print('-------------------------------------------')
-    for _, key in ipairs(sortedKeys) do
+    -- コマンドラインサイズを一時的に変更
+    vim.o.cmdheight = #info_list + 2
+    -- 情報表示
+    print('■■■■■■■■■■■■■■■■■■■■')
+    for _, key in ipairs(info_list) do
         print(key .. ': ' .. vim.g.menuList[key].desc)
     end
-    print('-------------------------------------------')
+    print('■■■■■■■■■■■■■■■■■■■■')
+    -- 元のコマンドラインサイズに戻す
+    vim.o.cmdheight = cmdheight
+end
+
+-- メニューを表示してユーザー入力に応じたアクションを実行する関数
+function ShowMenu()
+    -- メニュー表示
+    local menu_list = vim.tbl_keys(vim.g.menuList)
+    table.sort(menu_list)
+    display_info_list(menu_list)
 
     -- ユーザーの入力を待つ
     local user_input = vim.fn.nr2char(vim.fn.getchar())
-    vim.o.cmdheight = cmdheight
 
     -- 選択されたメニュー項目の実行
     if vim.g.menuList[user_input] then
@@ -192,6 +199,9 @@ function SetColorScheme()
     print('New Theme is: ' .. colorschemes[index])
 end
 
+-- ****************************
+-- Space + 7 :messagesの内容をクリップボードにコピー
+-- ****************************
 function CopyMessagesToClipboard()
     -- Get the messages
     local messages = vim.fn.execute('messages')
@@ -200,13 +210,44 @@ function CopyMessagesToClipboard()
     print("Messages copied to clipboard")
 end
 
+-- ****************************
+-- Space + 8 Telescope
+-- ****************************
 function ExecuteTelescope()
     vim.cmd('Telescope')
 end
 
+-- ****************************
+-- Space + 9 下半分にターミナルを表示
+-- ****************************
+-- ターミナル用のグローバル変数
+term_buf = nil
+term_win = nil
+
 function OpenTerminal()
-    vim.cmd('belowright new |resize 15 | terminal')
+  if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+    if term_win and vim.api.nvim_win_is_valid(term_win) then
+      vim.api.nvim_set_current_win(term_win)
+    else
+      vim.cmd("botright split")
+      term_win = vim.api.nvim_get_current_win()
+      vim.api.nvim_win_set_buf(term_win, term_buf)
+    end
+  else
+    vim.cmd("botright split")
+    term_win = vim.api.nvim_get_current_win()
+    term_buf = vim.api.nvim_create_buf(false, true)  -- 一時的なターミナルバッファ
+    vim.api.nvim_win_set_buf(term_win, term_buf)
+    vim.fn.termopen(vim.o.shell)
+    -- ターミナルモードでのキー割り当て
+    vim.api.nvim_buf_set_keymap(term_buf, 't', '<A-j>', [[<C-\><C-n>:hide<CR>]], { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(term_buf, 't', '<A-k>', [[<C-\><C-n>:wincmd p<CR>]], { noremap = true, silent = true })
+  end
+  vim.cmd("startinsert")  -- 初回オープン時にターミナルモードにする
+  vim.cmd("resize 15")  -- 初回オープン時にターミナルモードにする
 end
+-- ノーマルモードで <A-j> を押すとターミナルにフォーカスする
+vim.api.nvim_set_keymap('n', '<A-j>', ':lua OpenTerminal()<CR>', { noremap = true, silent = true })
 
 function ToggleBackground()
     if vim.o.background == "dark" then
