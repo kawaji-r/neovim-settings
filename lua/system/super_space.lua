@@ -183,14 +183,14 @@ function OpenTerminal()
     vim.api.nvim_win_set_buf(term_win, term_buf)
     vim.fn.termopen(vim.o.shell)
     -- ターミナルモードでのキー割り当て
-    vim.api.nvim_buf_set_keymap(term_buf, 't', '<A-j>', [[<C-\><C-n>:hide<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(term_buf, 't', '<A-k>', [[<C-\><C-n>:wincmd p<CR>]], { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(term_buf, 't', '<Down>', [[<C-\><C-n>:hide<CR>]], { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(term_buf, 't', '<Up>', [[<C-\><C-n>:wincmd p<CR>]], { noremap = true, silent = true })
   end
   vim.cmd("startinsert")  -- 初回オープン時にターミナルモードにする
   vim.cmd("resize 15")  -- 初回オープン時にターミナルモードにする
 end
--- ノーマルモードで <A-j> を押すとターミナルにフォーカスする
-vim.api.nvim_set_keymap('n', '<A-j>', ':lua OpenTerminal()<CR>', { noremap = true, silent = true })
+-- ノーマルモードで <Down> を押すとターミナルにフォーカスする
+vim.api.nvim_set_keymap('n', '<Down>', ':lua OpenTerminal()<CR>', { noremap = true, silent = true })
 
 function ToggleBackground()
     if vim.o.background == "dark" then

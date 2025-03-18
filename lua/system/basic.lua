@@ -15,13 +15,14 @@ vim.api.nvim_command("colorscheme peachpuff") -- カラー設定
 vim.api.nvim_set_keymap('v', '*', '<Cmd>lua require("system.functions").visual_search()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true})
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<Tab>', '<cmd>tabnext<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<S-Tab>', '<cmd>tabprevious<CR>', {noremap = true, silent = true})
 -- ウィンドウ移動
 vim.api.nvim_set_keymap('n', '<A-j>', '<C-w>j', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-h>', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-k>', '<C-w>k', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', {noremap = true})
+-- タブ移動
+vim.api.nvim_set_keymap('n', '<Right>', '<cmd>tabnext<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Left>', '<cmd>tabprevious<CR>', {noremap = true, silent = true})
 -- ウィンドウ幅変更
 vim.api.nvim_set_keymap('n', '<A-right>', '<C-w>>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<A-left>', '<C-w><', {noremap = true})
