@@ -109,18 +109,10 @@ end
 -- 配列を受け取ってprint表示する
 -- *****************************************
 function mod.display_info_list(info_list)
-    -- 元のコマンドラインサイズを記憶
-    local cmdheight = vim.o.cmdheight
-    -- コマンドラインサイズを一時的に変更
-    vim.o.cmdheight = #info_list + 2
     -- 情報表示
-    print('■■■■■■■■■■■■■■■■■■■■')
     for _, key in ipairs(info_list) do
         print(key .. ': ' .. vim.g.menu_list[key].desc)
     end
-    print('■■■■■■■■■■■■■■■■■■■■')
-    -- 元のコマンドラインサイズに戻す
-    vim.o.cmdheight = cmdheight
 end
 
 return mod
