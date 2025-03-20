@@ -1,6 +1,9 @@
+local func = require("system.functions")
+
 -- *****************************************
 -- 基本設定
 -- *****************************************
+vim.g.mapleader = '<Tab>'
 vim.opt.number = true  -- 行番号
 vim.opt.expandtab = true  -- タブ文字をスペースに
 vim.opt.shiftwidth = 4  -- インデント設定
@@ -12,22 +15,36 @@ vim.opt.listchars = 'tab:>-,extends:<,trail:-,eol:↩' -- どの文字でタブ�
 vim.opt.display:append("lastline")  -- ウィンドウの最下行に表示されるテキストが、行の一部が画面に収まらなくても、可能な限り表示されるようにする
 vim.api.nvim_command("colorscheme peachpuff") -- カラー設定
 -- MAP
-vim.api.nvim_set_keymap('v', '*', '<Cmd>lua require("system.functions").visual_search()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'Y', 'y$', {noremap = true})
-vim.api.nvim_set_keymap('i', 'jj', '<Esc>', {noremap = true})
+vim.keymap.set('v', '*', func.visual_search, { noremap = true, silent = true })
+vim.keymap.set('n', 'Y', 'y$', {noremap = true})
+vim.keymap.set('n', 'gg', 'gg0', {noremap = true})
+vim.keymap.set('n', 'G', 'G0', {noremap = true})
+vim.keymap.set('i', 'jj', '<Esc>', {noremap = true})
 -- ウィンドウ移動
-vim.api.nvim_set_keymap('n', '<A-j>', '<C-w>j', {noremap = true})
-vim.api.nvim_set_keymap('n', '<A-h>', '<C-w>h', {noremap = true})
-vim.api.nvim_set_keymap('n', '<A-k>', '<C-w>k', {noremap = true})
-vim.api.nvim_set_keymap('n', '<A-l>', '<C-w>l', {noremap = true})
+vim.keymap.set('n', '<A-j>', '<C-w>j', {noremap = true})
+vim.keymap.set('n', '<A-h>', '<C-w>h', {noremap = true})
+vim.keymap.set('n', '<A-k>', '<C-w>k', {noremap = true})
+vim.keymap.set('n', '<A-l>', '<C-w>l', {noremap = true})
 -- タブ移動
-vim.api.nvim_set_keymap('n', '<Right>', '<cmd>tabnext<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<Left>', '<cmd>tabprevious<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<Right>', '<cmd>tabnext<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<Left>', '<cmd>tabprevious<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<Tab>', '<cmd>tabnext<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<S-Tab>', '<cmd>tabprevious<CR>', {noremap = true, silent = true})
 -- ウィンドウ幅変更
-vim.api.nvim_set_keymap('n', '<A-right>', '<C-w>>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<A-left>', '<C-w><', {noremap = true})
-vim.api.nvim_set_keymap('n', '<A-up>', '<C-w>-', {noremap = true})
-vim.api.nvim_set_keymap('n', '<A-down>', '<C-w>+', {noremap = true})
+vim.keymap.set('n', '<A-right>', '<C-w>>', {noremap = true})
+vim.keymap.set('n', '<A-left>', '<C-w><', {noremap = true})
+vim.keymap.set('n', '<A-up>', '<C-w>-', {noremap = true})
+vim.keymap.set('n', '<A-down>', '<C-w>+', {noremap = true})
+-- ノーマルモードで <Down> を押すとターミナルにフォーカスする
+vim.keymap.set('n', '<Down>', function() func.open_terminal(1) end, { noremap = true, silent = true })
+-- ターミナルモードでのキー割り当て
+vim.keymap.set('t', '<Down>', [[<C-\><C-n>:hide<CR>]], { noremap = true, silent = true })
+vim.keymap.set('t', '<Up>', [[<C-\><C-n>:wincmd p<CR>]], { noremap = true, silent = true })
+vim.keymap.set('t', '<Right>', function() func.open_terminal(2) end, { noremap = true, silent = true })
+vim.keymap.set('t', '<Left>', function() func.open_terminal(3) end, { noremap = true, silent = true })
+vim.keymap.set('t', '<A-k>', [[<C-\><C-n>:wincmd k<CR>]], { noremap = true, silent = true })
+vim.keymap.set('t', '<A-l>', [[<C-\><C-n>:wincmd l<CR>i]], { noremap = true, silent = true })
+vim.keymap.set('t', '<A-h>', [[<C-\><C-n>:wincmd h<CR>i]], { noremap = true, silent = true })
 
 -- *****************************************
 -- バックアップ設定

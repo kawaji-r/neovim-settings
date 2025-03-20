@@ -7,10 +7,13 @@ function main()
       { 'tpope/vim-surround' },  -- vim surround
       { 'nvim-telescope/telescope.nvim' },  -- ファイル検索
       { 'numToStr/Comment.nvim' },  -- コメントアウト
+      { 'f-person/git-blame.nvim' },  -- カーソル行の編集日時などを表示
+      { 'akinsho/toggleterm.nvim' },  -- ターミナル強化 -- まだ使いこなせない
+      { 'lewis6991/gitsigns.nvim' },  -- Gitクライアント
       { 'lambdalisue/fern.vim' },  -- ファイラー
-      -- { 'lambdalisue/nerdfont.vim' },  -- Fernとセット
-      -- { 'lambdalisue/glyph-palette.vim' },  -- Fernとセット
-      -- { 'lambdalisue/fern-renderer-nerdfont.vim' },  -- Fernとセット
+      -- { 'lambdalisue/nerdfont.vim', lazy = true, keys = {{"j"}}},  -- Fernとセット
+      -- { 'lambdalisue/glyph-palette.vim', lazy = true, keys = {{"j"}} },  -- Fernとセット
+      -- { 'lambdalisue/fern-renderer-nerdfont.vim', lazy = true, keys = {{"j"}} },  -- Fernとセット
     },
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
@@ -22,9 +25,9 @@ function main()
   -- *****************************************
   -- 個別設定 LSP
   -- *****************************************
-  -- vim.api.nvim_create_autocmd("LspAttach", {
-  --   callback = function(ctx)
-  --     local set = vim.keymap.set
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(ctx)
+      local set = vim.keymap.set
   --     set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { buffer = true })
   --     set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { buffer = true })
   --     set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", { buffer = true })
@@ -37,13 +40,14 @@ function main()
   --     set("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { buffer = true })
   --     set("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", { buffer = true })
   --     set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { buffer = true })
-  --     set("n", "<space>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", { buffer = true })
+  --     set("n", "dg", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", { buffer = true })
   --     set("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", { buffer = true })
   --     set("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", { buffer = true })
   --     set("n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", { buffer = true })
   --     set("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", { buffer = true })
-  --   end,
-  -- })
+      set("n", "dg", "<cmd>lua vim.diagnostic.open_float()<CR>", { buffer = true })
+    end,
+  })
 
   -- *****************************************
   -- 個別設定 mason
@@ -55,6 +59,70 @@ function main()
       require("lspconfig")[server_name].setup {}
     end,
   }
+
+  -- *****************************************
+  -- 個別設定 Gitsigns
+  -- *****************************************
+  require('gitsigns').setup {
+    signs = {
+      add          = { text = '┃' },
+      change       = { text = '┃' },
+      delete       = { text = '_' },
+      topdelete    = { text = '‾' },
+      changedelete = { text = '~' },
+      untracked    = { text = '┆' },
+    },
+    signs_staged = {
+      add          = { text = '┃' },
+      change       = { text = '┃' },
+      delete       = { text = '_' },
+      topdelete    = { text = '‾' },
+      changedelete = { text = '~' },
+      untracked    = { text = '┆' },
+    },
+    signs_staged_enable = true,
+    signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+    numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+    linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+    word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+    watch_gitdir = {
+      follow_files = true
+    },
+    auto_attach = true,
+    attach_to_untracked = false,
+    current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+    current_line_blame_opts = {
+      virt_text = true,
+      virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+      delay = 1000,
+      ignore_whitespace = false,
+      virt_text_priority = 100,
+      use_focus = true,
+    },
+    current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+    sign_priority = 6,
+    update_debounce = 100,
+    status_formatter = nil, -- Use default
+    max_file_length = 40000, -- Disable if file is longer than this (in lines)
+    preview_config = {
+      -- Options passed to nvim_open_win
+      border = 'single',
+      style = 'minimal',
+      relative = 'cursor',
+      row = 0,
+      col = 1
+    },
+  }
+
+  -- *****************************************
+  -- 個別設定 toggleterm
+  -- *****************************************
+    -- まだ使いこなせない
+    -- require("toggleterm").setup()
+    -- ノーマルモードで <Down> を押すとターミナルにフォーカスする
+    -- vim.keymap.set('n', '<Down>', ':ToggleTerm<CR>', { noremap = true, silent = true })
+    -- vim.keymap.set('t', '<Down>', [[<C-\><C-n>:ToggleTerm<CR>]], { noremap = true, silent = true })
+    -- vim.keymap.set('t', '<Up>', [[<C-\><C-n>:wincmd p<CR>]], { noremap = true, silent = true })
 
   -- -------------------   個別設定:Fern -------------------
   local function fern_mappings()

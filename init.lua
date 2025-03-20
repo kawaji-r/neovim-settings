@@ -11,7 +11,9 @@ require("system.plugin")
 -- *****************************************
 -- スーパースペース設定
 -- *****************************************
-require("system.super_space")
+local space = require("system.super_space")
+-- local menu_list = {}
+-- space.add_menu(menu_list)
 
 -- *****************************************
 -- userフォルダ配下のファイルを全て読み込み

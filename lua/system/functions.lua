@@ -1,5 +1,76 @@
 local mod = {}
 
+-- ****************************
+-- 下半分にターミナルを表示
+-- ****************************
+-- ターミナル用のグローバル変数
+local term_buf = nil
+local term_win = nil
+
+function mod.open_terminal(mode)
+  if mode == 1 then
+    -- ターミナルバッファが既に存在するかどうか
+    if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+      -- ターミナルウィンドウが既に存在するかどうか
+      if term_win and vim.api.nvim_win_is_valid(term_win) then
+        -- ターミナルウィンドウに移動
+        vim.api.nvim_set_current_win(term_win)
+      else
+        -- ウィンドウを生成してターミナルバッファを表示
+        vim.cmd("botright split")
+        term_win = vim.api.nvim_get_current_win()
+        vim.api.nvim_win_set_buf(term_win, term_buf)
+      end
+    else
+      -- ウィンドウを生成してターミナルバッファを生成
+      vim.cmd("botright split")
+      term_win = vim.api.nvim_get_current_win()
+      term_buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_win_set_buf(term_win, term_buf)
+      vim.fn.termopen(vim.o.shell)
+    end
+  elseif mode == 2 then
+    vim.cmd("leftabove vsplit")
+    term_win = vim.api.nvim_get_current_win()
+    term_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_win_set_buf(term_win, term_buf)
+    vim.fn.termopen(vim.o.shell)
+  elseif mode == 3 then
+    -- 左側に新規ターミナルを開く
+    vim.cmd("vsplit")
+    term_win = vim.api.nvim_get_current_win()
+    term_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_win_set_buf(term_win, term_buf)
+    vim.fn.termopen(vim.o.shell)
+  end
+  vim.cmd("startinsert")  -- ターミナルモードに入る
+  vim.cmd("resize 15")    -- ウィンドウサイズを15行に設定
+end
+
+-- *****************************************
+-- Fernをトグルする関数
+-- *****************************************
+function mod.fern_anywhere(fern_list)
+    vim.cmd('redraw')
+    -- ディレクトリ選択リストの設定
+    if vim.g.fernList and not vim.tbl_isempty(vim.g.fernList) then
+        vim.list_extend(fern_list, vim.g.fernList)
+    end
+
+    vim.ui.select(fern_list, {prompt = "どのフォルダを開きますか？"}, function(choice, idx)
+      if choice then
+        if choice == '現在のファイルのパス' then
+            vim.cmd('Fern %:h -reveal=% -drawer -toggle -width=35')
+        else
+            vim.cmd('Fern ' .. choice .. ' -drawer -toggle -width=35')
+        end
+      else
+        print("該当する選択肢がありません。")
+        print(char)
+      end
+    end)
+end
+
 -- *****************************************
 -- ファイルをechoする
 -- *****************************************
@@ -39,7 +110,7 @@ function mod.visual_search()
         vim.fn.setreg('/', escaped_text)
         vim.opt.hlsearch = true
         -- 最初の一致に移動
-        vim.cmd('normal! n')
+        -- vim.cmd('normal! n')
     end
 end
 
@@ -72,20 +143,6 @@ function mod.ReturnUserSelected(array)
 end
 
 -- *****************************************
--- クリップボードの内容を貼り付ける関数
--- *****************************************
-function mod.paste_clipboard()
-    vim.cmd('normal "+P')
-end
-
--- *****************************************
--- 選択されたテキストをクリップボードにコピーする関数
--- *****************************************
-function mod.set_clipboard()
-    vim.cmd('normal! gv"+y')
-end
-
--- *****************************************
 -- 現在のモードが引数に指定されたモードのいずれかであるかを判定する関数
 -- *****************************************
 function mod.is_current_mode(modes)
@@ -113,6 +170,17 @@ function mod.display_info_list(info_list)
     for _, key in ipairs(info_list) do
         print(key .. ': ' .. vim.g.menu_list[key].desc)
     end
+end
+
+-- *****************************************
+-- dictをマージする
+-- *****************************************
+function mod.merge_dicts(dict1, dict2)
+    local result = vim.deepcopy(dict1)
+    for key, value in pairs(dict2) do
+        result[key] = value
+    end
+    return result
 end
 
 return mod
