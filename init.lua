@@ -33,3 +33,8 @@ for _, file in ipairs(files) do
     vim.cmd('source ' .. file)
   end
 end
+
+-- *****************************************
+-- 最後に読まないと都合の悪いもの
+-- *****************************************
+require("system.defer")

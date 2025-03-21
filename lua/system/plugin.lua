@@ -63,7 +63,8 @@ function main()
   -- *****************************************
   -- 個別設定 Gitsigns
   -- *****************************************
-  require('gitsigns').setup {
+  local gs = require('gitsigns')
+  gs.setup {
     signs = {
       add          = { text = '┃' },
       change       = { text = '┃' },
@@ -113,6 +114,8 @@ function main()
       col = 1
     },
   }
+  vim.keymap.set("n", "]c", function() gs.next_hunk() end)
+  vim.keymap.set("n", "[c", function() gs.prev_hunk() end)
 
   -- *****************************************
   -- 個別設定 toggleterm

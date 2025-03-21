@@ -1,7 +1,9 @@
 local M = {}
 
--- functions ロード
+-- モジュール ロード
 local funcs = require("system.functions")
+local gitsigns = require('gitsigns')
+
 
 -- Fernで開きたいパスリスト
 local fern_list = {
@@ -40,7 +42,10 @@ local menu_list = {
   { key = '1', desc = 'Fernを開く', method = function() vim.cmd('Fern . -reveal=% -drawer -toggle -width=25') end},
   { key = '2', desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end},
   { key = '3', desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end},
-  { key = 'y', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal! "+y') end},
+  { key = '4', desc = '[LSP] フォーマット', method = function() vim.lsp.buf.formatting() end},
+  { key = '5', desc = '[LSP] 診断結果を開く', method = function() vim.diagnostic.open_float() end},
+  { key = '6', desc = '[Git] 現在の箇所をステージング', method = function() gitsigns.stage_hunk() end},
+  { key = 'y', desc = 'クリップボードにヤンク', method = function() vim.cmd('normal! "+y') end},
   { key = 'p', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal "+P') end},
   { key = ' ', desc = '次のメニューを開く', method = open_next_menu},
 }
