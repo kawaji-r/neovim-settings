@@ -15,6 +15,8 @@ local fern_list = {
 local next_menu = {
     { desc = 'Fernを色々な場所で開く', method = function() funcs.fern_anywhere(fern_list) end },
     { desc = '最近開いたファイルを開く', method = function() vim.cmd('browse oldfiles') end },
+    { desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
+    { desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
 }
 
 local function open_next_menu()
@@ -39,11 +41,11 @@ end
 -- スペース1回で開くメニュー
 local menu_list = {
     { key = '1', desc = 'Fernを開く', method = function() vim.cmd('Fern . -reveal=% -drawer -toggle -width=25') end },
-    { key = '2', desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
-    { key = '3', desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
-    { key = '4', desc = '[LSP] フォーマット', method = function() vim.lsp.buf.formatting() end },
-    { key = '5', desc = '[LSP] 診断結果を開く', method = function() vim.diagnostic.open_float() end },
-    { key = '6', desc = '[Git] 現在の箇所をステージング', method = function() gitsigns.stage_hunk() end },
+    { key = '2', desc = '[Git] 差分表示', method = function() vim.cmd('DiffviewOpen') end },
+    { key = '3', desc = '[Git] 変更履歴表示', method = function() vim.cmd('DiffviewFileHistory %') end },
+    { key = '4', desc = '[Git] 現在のハンクをステージング', method = function() gitsigns.stage_hunk() end },
+    { key = '5', desc = '[LSP] フォーマット', method = function() vim.lsp.buf.format() end },
+    { key = '6', desc = '[LSP] 診断結果を開く', method = function() vim.diagnostic.open_float() end },
     { key = 'y', desc = 'クリップボードにヤンク', method = function() vim.cmd('normal! "+y') end },
     { key = 'p', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal "+P') end },
     { key = ' ', desc = '次のメニューを開く', method = open_next_menu },

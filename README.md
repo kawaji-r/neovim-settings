@@ -1,12 +1,14 @@
-## Install
+## インストール
 git clone git@github.com:kawaji-r/neovim-settings.git ~/.config/nvim
 
-## Structure
-* init.lua・・・設定ファイル
-* src/ginit.lua・・・GUI用設定ファイル
-* src/plugins.vim・・・プラグイン関連の設定を記述
-* src/space_functions.lua・・・プラグイン関連の設定を記述
-* backup・・・バックアップフォルダ（init.luaで定義）
-* user_src・・・この中のvimファイルを読み込まれる。ユーザー定義用。
-* autoload・・・vim-plugを利用するために必要
-* plugged・・・システム利用
+## 使い方
+### Git
+- 使用プラグイン
+    - `sindrets/diffview.nvim`
+    - `lewis6991/gitsigns.nvim`
+- 差分表示: コマンド`DiffviewOpen`（SuperSpace[2]にマッピング）
+- 変更履歴表示: コマンド`DiffviewFileHistory %`（SuperSpace[3]にマッピング）
+- ファイルパネルで `s` → ステージとアンステージをトグル
+- コマンド`require('gitsigns').stage_hunk()` → 現在のハンクをステージ（SuperSpace[4]にマッピング）
+- コマンド`require('gitsigns').next_hunk()` → 次のハンクへ移動（ `]c` にマッピング）
+
