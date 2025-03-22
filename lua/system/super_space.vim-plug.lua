@@ -2,23 +2,23 @@ local mod = require("system.functions")
 
 -- メニュー項目の設定
 local menu = {
-    [' '] = {method = nil, desc = '次の機能を見る'},
-    ['1'] = {method = 'OpenTree', desc = 'Fernを開く'},
-    ['2'] = {method = 'ExecuteTelescope', desc = 'Telescope'},
-    ['y'] = {method = 'SetClipboard', desc = 'クリップボードにコピー'},
-    ['p'] = {method = 'PasteClipboard', desc = 'クリップボードを貼り付け'},
+    [' '] = { method = nil, desc = '次の機能を見る' },
+    ['1'] = { method = 'OpenTree', desc = 'Fernを開く' },
+    ['2'] = { method = 'ExecuteTelescope', desc = 'Telescope' },
+    ['y'] = { method = 'SetClipboard', desc = 'クリップボードにコピー' },
+    ['p'] = { method = 'PasteClipboard', desc = 'クリップボードを貼り付け' },
 }
 
 local more_menu = {
-    [' '] = {method = nil, desc = '次の機能を見る'},
-    ['1'] = {method = 'OpenVimrc', desc = 'vim設定ファイルを開く'},
-    ['2'] = {method = 'OpenTree', desc = 'Fernを開く'},
-    ['3'] = {method = 'RecentFile', desc = '最近開いたファイルを開く'},
-    ['4'] = {method = 'InsertCurrentDate', desc = '日付と曜日を挿入する'},
-    ['5'] = {method = 'SetColorScheme', desc = 'テーマの変更（GUI限定）'},
-    ['6'] = {method = 'CopyMessagesToClipboard', desc = ':messagesの内容をクリップボードにコピー'},
-    ['7'] = {method = 'ExecuteTelescope', desc = 'Telescope'},
-    ['8'] = {method = 'ToggleBackground', desc = 'ダークテーマとライトテーマ入れ替え'},
+    [' '] = { method = nil, desc = '次の機能を見る' },
+    ['1'] = { method = 'OpenVimrc', desc = 'vim設定ファイルを開く' },
+    ['2'] = { method = 'OpenTree', desc = 'Fernを開く' },
+    ['3'] = { method = 'RecentFile', desc = '最近開いたファイルを開く' },
+    ['4'] = { method = 'InsertCurrentDate', desc = '日付と曜日を挿入する' },
+    ['5'] = { method = 'SetColorScheme', desc = 'テーマの変更（GUI限定）' },
+    ['6'] = { method = 'CopyMessagesToClipboard', desc = ':messagesの内容をクリップボードにコピー' },
+    ['7'] = { method = 'ExecuteTelescope', desc = 'Telescope' },
+    ['8'] = { method = 'ToggleBackground', desc = 'ダークテーマとライトテーマ入れ替え' },
 }
 
 -- ユーザー定義辞書とマージ
@@ -45,7 +45,7 @@ function ShowMenu(menu_list)
         if vim.fn.exists('*' .. vim.g.menu_list[user_input].method) == 1 then
             vim.cmd('call ' .. vim.g.menu_list[user_input].method .. '()')
         elseif _G[vim.g.menu_list[user_input].method] ~= nil then
-            _G[vim.g.menu_list[user_input].method]()  -- グローバルテーブルから関数を呼び出す
+            _G[vim.g.menu_list[user_input].method]() -- グローバルテーブルから関数を呼び出す
         else
             print('関数がありません／' .. vim.g.menu_list[user_input].method)
         end
@@ -87,7 +87,7 @@ function OpenTree()
     else
         -- 開いていないため、開くための処理
         -- ディレクトリ選択リストの設定
-        local dirList = {'現在のファイルのパス', vim.fn.stdpath("config")}
+        local dirList = { '現在のファイルのパス', vim.fn.stdpath("config") }
         if vim.g.fernList and not vim.tbl_isempty(vim.g.fernList) then
             vim.list_extend(dirList, vim.g.fernList)
         end
@@ -109,7 +109,7 @@ end
 
 -- 日付と曜日を挿入する関数
 function InsertCurrentDate()
-    local days = {'日', '月', '火', '水', '木', '金', '土'}
+    local days = { '日', '月', '火', '水', '木', '金', '土' }
     local date = os.date("%Y-%m-%d")
     local day = days[tonumber(os.date("%w")) + 1]
     local result = date .. '(' .. day .. ')'
@@ -166,43 +166,43 @@ term_buf = nil
 term_win = nil
 
 function OpenTerminal(mode)
-  if mode == 1 then
-    -- ターミナルバッファが既に存在するかどうか
-    if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
-      -- ターミナルウィンドウが既に存在するかどうか
-      if term_win and vim.api.nvim_win_is_valid(term_win) then
-        -- ターミナルウィンドウに移動
-        vim.api.nvim_set_current_win(term_win)
-      else
-        -- ウィンドウを生成してターミナルバッファを表示
-        vim.cmd("botright split")
+    if mode == 1 then
+        -- ターミナルバッファが既に存在するかどうか
+        if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+            -- ターミナルウィンドウが既に存在するかどうか
+            if term_win and vim.api.nvim_win_is_valid(term_win) then
+                -- ターミナルウィンドウに移動
+                vim.api.nvim_set_current_win(term_win)
+            else
+                -- ウィンドウを生成してターミナルバッファを表示
+                vim.cmd("botright split")
+                term_win = vim.api.nvim_get_current_win()
+                vim.api.nvim_win_set_buf(term_win, term_buf)
+            end
+        else
+            -- ウィンドウを生成してターミナルバッファを生成
+            vim.cmd("botright split")
+            term_win = vim.api.nvim_get_current_win()
+            term_buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_win_set_buf(term_win, term_buf)
+            vim.fn.termopen(vim.o.shell)
+        end
+    elseif mode == 2 then
+        vim.cmd("leftabove vsplit")
         term_win = vim.api.nvim_get_current_win()
+        term_buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_win_set_buf(term_win, term_buf)
-      end
-    else
-      -- ウィンドウを生成してターミナルバッファを生成
-      vim.cmd("botright split")
-      term_win = vim.api.nvim_get_current_win()
-      term_buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_win_set_buf(term_win, term_buf)
-      vim.fn.termopen(vim.o.shell)
+        vim.fn.termopen(vim.o.shell)
+    elseif mode == 3 then
+        -- 左側に新規ターミナルを開く
+        vim.cmd("vsplit")
+        term_win = vim.api.nvim_get_current_win()
+        term_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_win_set_buf(term_win, term_buf)
+        vim.fn.termopen(vim.o.shell)
     end
-  elseif mode == 2 then
-    vim.cmd("leftabove vsplit")
-    term_win = vim.api.nvim_get_current_win()
-    term_buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_win_set_buf(term_win, term_buf)
-    vim.fn.termopen(vim.o.shell)
-  elseif mode == 3 then
-    -- 左側に新規ターミナルを開く
-    vim.cmd("vsplit")
-    term_win = vim.api.nvim_get_current_win()
-    term_buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_win_set_buf(term_win, term_buf)
-    vim.fn.termopen(vim.o.shell)
-  end
-  vim.cmd("startinsert")  -- ターミナルモードに入る
-  vim.cmd("resize 15")    -- ウィンドウサイズを15行に設定
+    vim.cmd("startinsert") -- ターミナルモードに入る
+    vim.cmd("resize 15") -- ウィンドウサイズを15行に設定
 end
 
 function ToggleBackground()
@@ -216,4 +216,3 @@ end
 -- Spaceキーにメニュー表示関数をマッピング
 -- vim.api.nvim_set_keymap('n', '<Space>', ':lua ShowMenu(vim.g.menu_list)<CR>', {noremap = true, silent = true})
 -- vim.api.nvim_set_keymap('v', '<Space>', ':<C-u>lua ShowMenu(vim.g.menu_list)<CR>', {noremap = true, silent = true})
-

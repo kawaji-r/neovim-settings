@@ -3,39 +3,39 @@ local func = require("system.functions")
 -- *****************************************
 -- 基本設定
 -- *****************************************
-vim.opt.number = true  -- 行番号
-vim.opt.expandtab = true  -- タブ文字をスペースに
-vim.opt.shiftwidth = 4  -- インデント設定
-vim.opt.tabstop = 4  -- インデント設定
-vim.opt.showtabline = 2  -- タブを表示する
-vim.opt.ignorecase = false  -- 検索時の大文字小文字参照
+vim.opt.number = true -- 行番号
+vim.opt.expandtab = true -- タブ文字をスペースに
+vim.opt.shiftwidth = 4 -- インデント設定
+vim.opt.tabstop = 4 -- インデント設定
+vim.opt.showtabline = 2 -- タブを表示する
+vim.opt.ignorecase = false -- 検索時の大文字小文字参照
 vim.opt.list = true -- タブや改行を表示 (list:表示)
 vim.opt.listchars = 'tab:>-,extends:<,trail:-,eol:↩' -- どの文字でタブや改行を表示するかを設定
-vim.opt.display:append("lastline")  -- ウィンドウの最下行に表示されるテキストが、行の一部が画面に収まらなくても、可能な限り表示されるようにする
+vim.opt.display:append("lastline") -- ウィンドウの最下行に表示されるテキストが、行の一部が画面に収まらなくても、可能な限り表示されるようにする
 vim.api.nvim_command("colorscheme peachpuff") -- カラー設定
 -- MAP
 vim.keymap.set('v', '*', func.visual_search, { noremap = true, silent = true })
-vim.keymap.set('n', 'Y', 'y$', {noremap = true})
-vim.keymap.set('n', 'gg', 'gg0', {noremap = true})
-vim.keymap.set('n', 'G', 'G0', {noremap = true})
-vim.keymap.set('i', 'jj', '<Esc>', {noremap = true})
+vim.keymap.set('n', 'Y', 'y$', { noremap = true })
+vim.keymap.set('n', 'gg', 'gg0', { noremap = true })
+vim.keymap.set('n', 'G', 'G0', { noremap = true })
+vim.keymap.set('i', 'jj', '<Esc>', { noremap = true })
 -- ウィンドウ移動
 -- vim.keymap.set('n', '<C-j>', '<C-w>j', {noremap = true})
 -- vim.keymap.set('n', '<C-h>', '<C-w>h', {noremap = true})
 -- vim.keymap.set('n', '<C-k>', '<C-w>k', {noremap = true})
 -- vim.keymap.set('n', '<C-l>', '<C-w>l', {noremap = true}) -- これが効かないため保留
-vim.keymap.set('n', '<Down>', '<C-w>j', {noremap = true})
-vim.keymap.set('n', '<Left>', '<C-w>h', {noremap = true})
-vim.keymap.set('n', '<Up>', '<C-w>k', {noremap = true})
-vim.keymap.set('n', '<Right>', '<C-w>l', {noremap = true})
+vim.keymap.set('n', '<Down>', '<C-w>j', { noremap = true })
+vim.keymap.set('n', '<Left>', '<C-w>h', { noremap = true })
+vim.keymap.set('n', '<Up>', '<C-w>k', { noremap = true })
+vim.keymap.set('n', '<Right>', '<C-w>l', { noremap = true })
 -- タブ移動
-vim.keymap.set('n', '<Tab>', '<cmd>tabnext<CR>', {noremap = true, silent = true})
-vim.keymap.set('n', '<S-Tab>', '<cmd>tabprevious<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<Tab>', '<cmd>tabnext<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<S-Tab>', '<cmd>tabprevious<CR>', { noremap = true, silent = true })
 -- ウィンドウ幅変更
-vim.keymap.set('n', '<A-right>', '<C-w>>', {noremap = true})
-vim.keymap.set('n', '<A-left>', '<C-w><', {noremap = true})
-vim.keymap.set('n', '<A-up>', '<C-w>-', {noremap = true})
-vim.keymap.set('n', '<A-down>', '<C-w>+', {noremap = true})
+vim.keymap.set('n', '<A-right>', '<C-w>>', { noremap = true })
+vim.keymap.set('n', '<A-left>', '<C-w><', { noremap = true })
+vim.keymap.set('n', '<A-up>', '<C-w>-', { noremap = true })
+vim.keymap.set('n', '<A-down>', '<C-w>+', { noremap = true })
 -- ノーマルモードで <Down> を押すとターミナルにフォーカスする
 vim.keymap.set('n', '<A-j>', function() func.open_terminal(1) end, { noremap = true, silent = true })
 -- ターミナルモードでのキー割り当て
@@ -64,4 +64,3 @@ vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
 -- 日本語の幅がおかしいため、設定
 vim.opt.ambiwidth = 'double'
-

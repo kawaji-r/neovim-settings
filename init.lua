@@ -25,13 +25,13 @@ local user_config_dir = vim.fn.stdpath("config") .. '/user'
 local files = vim.fn.split(vim.fn.glob(user_config_dir .. '/*'), '\n')
 
 for _, file in ipairs(files) do
-  if file:match('%.lua$') then
-    -- Lua ファイルの場合は dofile で実行
-    dofile(file)
-  elseif file:match('%.vim$') then
-    -- Vimscript ファイルの場合は source で読み込み
-    vim.cmd('source ' .. file)
-  end
+    if file:match('%.lua$') then
+        -- Lua ファイルの場合は dofile で実行
+        dofile(file)
+    elseif file:match('%.vim$') then
+        -- Vimscript ファイルの場合は source で読み込み
+        vim.cmd('source ' .. file)
+    end
 end
 
 -- *****************************************

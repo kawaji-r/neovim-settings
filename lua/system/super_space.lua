@@ -13,118 +13,116 @@ local fern_list = {
 
 -- スペース2回で開くメニュー
 local next_menu = {
-  { desc = 'Fernを色々な場所で開く', method = function() funcs.fern_anywhere(fern_list) end},
-  { desc = '最近開いたファイルを開く', method = function() vim.cmd('browse oldfiles') end},
+    { desc = 'Fernを色々な場所で開く', method = function() funcs.fern_anywhere(fern_list) end },
+    { desc = '最近開いたファイルを開く', method = function() vim.cmd('browse oldfiles') end },
 }
 
 local function open_next_menu()
-  vim.cmd('redraw')
+    vim.cmd('redraw')
 
-  local select_opts = {
-    prompt = "Next Menu",
-    format_item = function(item)
-      return item.desc
-    end,
-  }
-  vim.ui.select(next_menu, select_opts, function(choice, idx)
-    if choice then
-      choice.method()
-    else
-      print("該当する選択肢がありません。")
-      print(char)
-    end
-  end)
-
+    local select_opts = {
+        prompt = "Next Menu",
+        format_item = function(item)
+            return item.desc
+        end,
+    }
+    vim.ui.select(next_menu, select_opts, function(choice, idx)
+        if choice then
+            choice.method()
+        else
+            print("該当する選択肢がありません。")
+            print(char)
+        end
+    end)
 end
 
 -- スペース1回で開くメニュー
 local menu_list = {
-  { key = '1', desc = 'Fernを開く', method = function() vim.cmd('Fern . -reveal=% -drawer -toggle -width=25') end},
-  { key = '2', desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end},
-  { key = '3', desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end},
-  { key = '4', desc = '[LSP] フォーマット', method = function() vim.lsp.buf.formatting() end},
-  { key = '5', desc = '[LSP] 診断結果を開く', method = function() vim.diagnostic.open_float() end},
-  { key = '6', desc = '[Git] 現在の箇所をステージング', method = function() gitsigns.stage_hunk() end},
-  { key = 'y', desc = 'クリップボードにヤンク', method = function() vim.cmd('normal! "+y') end},
-  { key = 'p', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal "+P') end},
-  { key = ' ', desc = '次のメニューを開く', method = open_next_menu},
+    { key = '1', desc = 'Fernを開く', method = function() vim.cmd('Fern . -reveal=% -drawer -toggle -width=25') end },
+    { key = '2', desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
+    { key = '3', desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
+    { key = '4', desc = '[LSP] フォーマット', method = function() vim.lsp.buf.formatting() end },
+    { key = '5', desc = '[LSP] 診断結果を開く', method = function() vim.diagnostic.open_float() end },
+    { key = '6', desc = '[Git] 現在の箇所をステージング', method = function() gitsigns.stage_hunk() end },
+    { key = 'y', desc = 'クリップボードにヤンク', method = function() vim.cmd('normal! "+y') end },
+    { key = 'p', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal "+P') end },
+    { key = ' ', desc = '次のメニューを開く', method = open_next_menu },
 }
 
 -- オプションの各要素の型や値の妥当性を検証する関数
 local function validate_menu_list(menu_list)
-  if type(menu_list) ~= "table" then
-    error("menu_list はテーブルである必要があります")
-  end
+    if type(menu_list) ~= "table" then
+        error("menu_list はテーブルである必要があります")
+    end
 
-  for index, opt in ipairs(menu_list) do
-    if type(opt) ~= "table" then
-      error("menu_list の各要素はテーブルである必要があります (index " .. index .. ")")
+    for index, opt in ipairs(menu_list) do
+        if type(opt) ~= "table" then
+            error("menu_list の各要素はテーブルである必要があります (index " .. index .. ")")
+        end
+        if type(opt.key) ~= "string" then
+            error("menu_list の各要素の 'key' は文字列である必要があります (index " .. index .. ")")
+        end
+        if type(opt.method) ~= "function" then
+            error("menu_list の各要素の 'method' は関数である必要があります (index " .. index .. ")")
+        end
+        if type(opt.desc) ~= "string" then
+            error("menu_list の各要素の 'desc' は文字列である必要があります (index " .. index .. ")")
+        end
     end
-    if type(opt.key) ~= "string" then
-      error("menu_list の各要素の 'key' は文字列である必要があります (index " .. index .. ")")
-    end
-    if type(opt.method) ~= "function" then
-      error("menu_list の各要素の 'method' は関数である必要があります (index " .. index .. ")")
-    end
-    if type(opt.desc) ~= "string" then
-      error("menu_list の各要素の 'desc' は文字列である必要があります (index " .. index .. ")")
-    end
-  end
 end
 
 -- 外部からオプションを追加する関数
 function M.add_menu(new_list)
-  validate_menu_list(new_list)
-  for _, opt in ipairs(new_list) do
-    table.insert(menu_list, opt)
-  end
+    validate_menu_list(new_list)
+    for _, opt in ipairs(new_list) do
+        table.insert(menu_list, opt)
+    end
 end
 
 function M.run_input_methods_visual()
     vim.api.nvim_input("<Esc>")
     vim.defer_fn(function()
-      M.run_input_methods()
-    end, 50)  -- 50ミリ秒遅延
+        M.run_input_methods()
+    end, 50) -- 50ミリ秒遅延
 end
 
 -- ユーザー入力を取得し、対応する method を実行する関数
 function M.run_input_methods()
-  local org_cmdheight = vim.o.cmdheight
-  vim.o.cmdheight = #menu_list + 1
+    local org_cmdheight = vim.o.cmdheight
+    vim.o.cmdheight = #menu_list + 1
 
-  validate_menu_list(menu_list)
+    validate_menu_list(menu_list)
 
-  print("Super Menu")
-  for _, opt in ipairs(menu_list) do
-    print(string.format("  [%s] %s", opt.key, opt.desc))
-  end
-
-  local char = vim.fn.nr2char(vim.fn.getchar())
-  vim.o.cmdheight = org_cmdheight
-
-  local selected_menu = nil
-  for _, opt in ipairs(menu_list) do
-    if opt.key == char then
-      selected_menu = opt
-      break
+    print("Super Menu")
+    for _, opt in ipairs(menu_list) do
+        print(string.format("  [%s] %s", opt.key, opt.desc))
     end
-  end
 
-  if selected_menu then
-    selected_menu.method()
-  else
-    print("該当する選択肢がありません。")
-    print(char)
-  end
+    local char = vim.fn.nr2char(vim.fn.getchar())
+    vim.o.cmdheight = org_cmdheight
+
+    local selected_menu = nil
+    for _, opt in ipairs(menu_list) do
+        if opt.key == char then
+            selected_menu = opt
+            break
+        end
+    end
+
+    if selected_menu then
+        selected_menu.method()
+    else
+        print("該当する選択肢がありません。")
+        print(char)
+    end
 end
 
 -- run_input_methods を Vim コマンドとして登録
 vim.api.nvim_create_user_command("SuperSpace", M.run_input_methods, {
-  desc = "ユーザー入力に基づくメソッドの実行"
+    desc = "ユーザー入力に基づくメソッドの実行"
 })
 
-vim.keymap.set('n', '<Space>', '<cmd>SuperSpace<CR>', {noremap = true, silent = true})
-vim.keymap.set('v', '<Space>', '<cmd>SuperSpace<CR>', {noremap = true, silent = true})
+vim.keymap.set('n', '<Space>', '<cmd>SuperSpace<CR>', { noremap = true, silent = true })
+vim.keymap.set('v', '<Space>', '<cmd>SuperSpace<CR>', { noremap = true, silent = true })
 
 return M
-

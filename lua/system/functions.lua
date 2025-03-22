@@ -8,43 +8,43 @@ local term_buf = nil
 local term_win = nil
 
 function mod.open_terminal(mode)
-  if mode == 1 then
-    -- ターミナルバッファが既に存在するかどうか
-    if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
-      -- ターミナルウィンドウが既に存在するかどうか
-      if term_win and vim.api.nvim_win_is_valid(term_win) then
-        -- ターミナルウィンドウに移動
-        vim.api.nvim_set_current_win(term_win)
-      else
-        -- ウィンドウを生成してターミナルバッファを表示
-        vim.cmd("botright split")
+    if mode == 1 then
+        -- ターミナルバッファが既に存在するかどうか
+        if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+            -- ターミナルウィンドウが既に存在するかどうか
+            if term_win and vim.api.nvim_win_is_valid(term_win) then
+                -- ターミナルウィンドウに移動
+                vim.api.nvim_set_current_win(term_win)
+            else
+                -- ウィンドウを生成してターミナルバッファを表示
+                vim.cmd("botright split")
+                term_win = vim.api.nvim_get_current_win()
+                vim.api.nvim_win_set_buf(term_win, term_buf)
+            end
+        else
+            -- ウィンドウを生成してターミナルバッファを生成
+            vim.cmd("botright split")
+            term_win = vim.api.nvim_get_current_win()
+            term_buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_win_set_buf(term_win, term_buf)
+            vim.fn.termopen(vim.o.shell)
+        end
+    elseif mode == 2 then
+        vim.cmd("leftabove vsplit")
         term_win = vim.api.nvim_get_current_win()
+        term_buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_win_set_buf(term_win, term_buf)
-      end
-    else
-      -- ウィンドウを生成してターミナルバッファを生成
-      vim.cmd("botright split")
-      term_win = vim.api.nvim_get_current_win()
-      term_buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_win_set_buf(term_win, term_buf)
-      vim.fn.termopen(vim.o.shell)
+        vim.fn.termopen(vim.o.shell)
+    elseif mode == 3 then
+        -- 左側に新規ターミナルを開く
+        vim.cmd("vsplit")
+        term_win = vim.api.nvim_get_current_win()
+        term_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_win_set_buf(term_win, term_buf)
+        vim.fn.termopen(vim.o.shell)
     end
-  elseif mode == 2 then
-    vim.cmd("leftabove vsplit")
-    term_win = vim.api.nvim_get_current_win()
-    term_buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_win_set_buf(term_win, term_buf)
-    vim.fn.termopen(vim.o.shell)
-  elseif mode == 3 then
-    -- 左側に新規ターミナルを開く
-    vim.cmd("vsplit")
-    term_win = vim.api.nvim_get_current_win()
-    term_buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_win_set_buf(term_win, term_buf)
-    vim.fn.termopen(vim.o.shell)
-  end
-  vim.cmd("startinsert")  -- ターミナルモードに入る
-  vim.cmd("resize 15")    -- ウィンドウサイズを15行に設定
+    vim.cmd("startinsert") -- ターミナルモードに入る
+    vim.cmd("resize 15") -- ウィンドウサイズを15行に設定
 end
 
 -- *****************************************
@@ -57,17 +57,17 @@ function mod.fern_anywhere(fern_list)
         vim.list_extend(fern_list, vim.g.fernList)
     end
 
-    vim.ui.select(fern_list, {prompt = "どのフォルダを開きますか？"}, function(choice, idx)
-      if choice then
-        if choice == '現在のファイルのパス' then
-            vim.cmd('Fern %:h -reveal=% -drawer -toggle -width=35')
+    vim.ui.select(fern_list, { prompt = "どのフォルダを開きますか？" }, function(choice, idx)
+        if choice then
+            if choice == '現在のファイルのパス' then
+                vim.cmd('Fern %:h -reveal=% -drawer -toggle -width=35')
+            else
+                vim.cmd('Fern ' .. choice .. ' -drawer -toggle -width=35')
+            end
         else
-            vim.cmd('Fern ' .. choice .. ' -drawer -toggle -width=35')
+            print("該当する選択肢がありません。")
+            print(char)
         end
-      else
-        print("該当する選択肢がありません。")
-        print(char)
-      end
     end)
 end
 
