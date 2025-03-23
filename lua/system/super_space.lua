@@ -17,6 +17,7 @@ local next_menu = {
     { desc = '最近開いたファイルを開く', method = function() vim.cmd('browse oldfiles') end },
     { desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
     { desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
+    { desc = '自動フォーマット設定の切り替え', method = funcs.toggle_auto_format },
 }
 
 local function open_next_menu()

@@ -44,7 +44,7 @@ function mod.open_terminal(mode)
         vim.fn.termopen(vim.o.shell)
     end
     vim.cmd("startinsert") -- ターミナルモードに入る
-    vim.cmd("resize 15") -- ウィンドウサイズを15行に設定
+    vim.cmd("resize 15")   -- ウィンドウサイズを15行に設定
 end
 
 -- *****************************************
@@ -69,6 +69,14 @@ function mod.fern_anywhere(fern_list)
             print(char)
         end
     end)
+end
+
+-- ****************************
+-- 自動フォーマットをON/OFF切り替える
+-- ****************************
+function mod.toggle_auto_format()
+    vim.g.autoformat_enabled = not vim.g.autoformat_enabled
+    print("\nAutoformat: " .. (vim.g.autoformat_enabled and "ON" or "OFF"))
 end
 
 -- *****************************************
