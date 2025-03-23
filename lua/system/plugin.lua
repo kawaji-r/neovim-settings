@@ -12,16 +12,31 @@ function main()
             { 'hrsh7th/nvim-cmp' },                  -- 補完プラグイン
             { 'hrsh7th/cmp-vsnip' },                 -- 補完プラグイン
             { 'hrsh7th/vim-vsnip' },                 -- 補完プラグイン
-            { 'tpope/vim-surround' },                -- vim surround
-            { 'nvim-telescope/telescope.nvim' },     -- ファイル検索
-            { 'numToStr/Comment.nvim' },             -- コメントアウト
-            { 'f-person/git-blame.nvim' },           -- カーソル行の編集日時などを表示
-            { 'akinsho/toggleterm.nvim' },           -- ターミナル強化 -- まだ使いこなせない
-            { 'sindrets/diffview.nvim' },            -- Gitビューワー
-            { 'lewis6991/gitsigns.nvim' },           -- Gitクライアント
-            { 'nvim-lualine/lualine.nvim' },         -- ステータスライン
-            { 'jdkanani/vim-material-theme' },       -- カラースキーム
-            {                                        -- ファイラー
+            { 'github/copilot.vim' },                -- Github Copilot
+            {
+                "CopilotC-Nvim/CopilotChat.nvim",
+                branch = "canary",
+                dependencies = {
+                    { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+                    { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
+                },
+                build = "make tiktoken",          -- Only on MacOS or Linux
+                opts = {
+                    debug = true,                 -- Enable debugging
+                    -- See Configuration section for rest
+                },
+                -- See Commands section for default commands if you want to lazy load on them
+            },                                   -- Github Copilot
+            { 'tpope/vim-surround' },            -- vim surround
+            { 'nvim-telescope/telescope.nvim' }, -- ファイル検索
+            { 'numToStr/Comment.nvim' },         -- コメントアウト
+            { 'f-person/git-blame.nvim' },       -- カーソル行の編集日時などを表示
+            { 'akinsho/toggleterm.nvim' },       -- ターミナル強化 -- まだ使いこなせない
+            { 'sindrets/diffview.nvim' },        -- Gitビューワー
+            { 'lewis6991/gitsigns.nvim' },       -- Gitクライアント
+            { 'nvim-lualine/lualine.nvim' },     -- ステータスライン
+            { 'jdkanani/vim-material-theme' },   -- カラースキーム
+            {                                    -- ファイラー
                 "nvim-neo-tree/neo-tree.nvim",
                 dependencies = {
                     "nvim-lua/plenary.nvim",
@@ -304,6 +319,11 @@ function main()
             end, { buffer = true, noremap = true, silent = true })
         end,
     })
+
+    -- *****************************************
+    -- 個別設定 Copilot
+    -- *****************************************
+    require('system.plugin.CopilotChat')
 
     -- *****************************************
     -- 個別設定 Telescope
