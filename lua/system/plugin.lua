@@ -20,6 +20,7 @@ function main()
             { 'sindrets/diffview.nvim' },            -- Gitビューワー
             { 'lewis6991/gitsigns.nvim' },           -- Gitクライアント
             { 'nvim-lualine/lualine.nvim' },         -- ステータスライン
+            { 'jdkanani/vim-material-theme' },       -- カラースキーム
             {                                        -- ファイラー
                 "nvim-neo-tree/neo-tree.nvim",
                 dependencies = {
@@ -273,8 +274,35 @@ function main()
                     desc = "Open with System Application",
                 },
                 ["P"] = { "toggle_preview", config = { use_float = false } },
+                ["."] = function(state)
+                    local node = state.tree:get_node()
+                    if node.type == "directory" then
+                        require("neo-tree.sources.filesystem").navigate(state, node.path) -- フォルダをルートに設定
+                        vim.cmd("lcd " .. node.path)                                      -- lcd でカレントディレクトリを変更
+                        print("Changed directory to: " .. node.path)
+                    else
+                        print("Not a directory: " .. node.path)
+                    end
+                end,
+                ["/"] = "noop", -- `/` のデフォルト検索を無効化
             },
         },
+    })
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = "neo-tree",
+        callback = function()
+            vim.keymap.set("n", "cd", function()
+                local state = require("neo-tree.sources.manager").get_state("filesystem")
+                local node = state.tree:get_node()
+
+                if node.type == "directory" then
+                    vim.cmd("lcd " .. node.path) -- カレントディレクトリを変更
+                    print("Changed directory to: " .. node.path)
+                else
+                    print("Not a directory: " .. node.path)
+                end
+            end, { buffer = true, noremap = true, silent = true })
+        end,
     })
 
     -- *****************************************
