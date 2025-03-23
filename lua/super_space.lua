@@ -1,7 +1,7 @@
 local M = {}
 
 -- モジュール ロード
-local funcs = require("system.functions")
+local funcs = require("functions")
 local gitsigns = require('gitsigns')
 
 

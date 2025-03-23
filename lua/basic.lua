@@ -1,4 +1,4 @@
-local func = require("system.functions")
+local func = require("functions")
 
 -- *****************************************
 -- 基本設定

@@ -323,7 +323,7 @@ function main()
     -- *****************************************
     -- 個別設定 Copilot
     -- *****************************************
-    require('system.plugin.CopilotChat')
+    require('plugin.CopilotChat')
 
     -- *****************************************
     -- 個別設定 Telescope

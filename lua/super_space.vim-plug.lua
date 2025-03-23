@@ -1,4 +1,4 @@
-local mod = require("system.functions")
+local mod = require("functions")
 
 -- メニュー項目の設定
 local menu = {
