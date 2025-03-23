@@ -12,8 +12,6 @@ require("system.basic")
 -- スーパースペース設定
 -- *****************************************
 local space = require("system.super_space")
--- local menu_list = {}
--- space.add_menu(menu_list)
 
 -- *****************************************
 -- userフォルダ配下のファイルを全て読み込み
@@ -32,4 +30,12 @@ for _, file in ipairs(files) do
         -- Vimscript ファイルの場合は source で読み込み
         vim.cmd('source ' .. file)
     end
+end
+
+-- *****************************************
+-- カレントディレクトリの `.nvim/init.lua` があればロードする
+-- *****************************************
+local local_init = vim.fn.getcwd() .. "/.nvim/init.lua"
+if vim.fn.filereadable(local_init) == 1 then
+    dofile(local_init)
 end

@@ -19,51 +19,21 @@ function main()
             { 'akinsho/toggleterm.nvim' },           -- ターミナル強化 -- まだ使いこなせない
             { 'sindrets/diffview.nvim' },            -- Gitビューワー
             { 'lewis6991/gitsigns.nvim' },           -- Gitクライアント
-            { 'lambdalisue/fern.vim' },              -- ファイラー
-            -- { 'lambdalisue/nerdfont.vim', lazy = true, keys = {{"j"}}},  -- Fernとセット
-            -- { 'lambdalisue/glyph-palette.vim', lazy = true, keys = {{"j"}} },  -- Fernとセット
-            -- { 'lambdalisue/fern-renderer-nerdfont.vim', lazy = true, keys = {{"j"}} },  -- Fernとセット
+            { 'nvim-lualine/lualine.nvim' },         -- ステータスライン
+            {                                        -- ファイラー
+                "nvim-neo-tree/neo-tree.nvim",
+                dependencies = {
+                    "nvim-lua/plenary.nvim",
+                    'nvim-tree/nvim-web-devicons', -- アイコンを表示
+                    "MunifTanjim/nui.nvim",
+                },
+            }
         },
         -- Configure any other settings here. See the documentation for more details.
         -- colorscheme that will be used when installing plugins.
         install = { colorscheme = { "habamax" } },
         -- automatically check for plugin updates
         checker = { enabled = true },
-    })
-
-    -- *****************************************
-    -- 個別設定 LSP
-    -- *****************************************
-    vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(ctx)
-            local set = vim.keymap.set
-            --     set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { buffer = true })
-            --     set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { buffer = true })
-            --     set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", { buffer = true })
-            --     set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { buffer = true })
-            --     set("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { buffer = true })
-            --     set("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", { buffer = true })
-            --     set("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", { buffer = true })
-            --     set("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", { buffer = true })
-            --     set("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { buffer = true })
-            --     set("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { buffer = true })
-            --     set("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", { buffer = true })
-            --     set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { buffer = true })
-            --     set("n", "dg", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", { buffer = true })
-            --     set("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", { buffer = true })
-            --     set("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", { buffer = true })
-            --     set("n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", { buffer = true })
-            --     set("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", { buffer = true })
-            set("n", "dg", "<cmd>lua vim.diagnostic.open_float()<CR>", { buffer = true })
-        end,
-    })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*",
-        callback = function()
-            if vim.g.autoformat_enabled then
-                vim.lsp.buf.format()
-            end
-        end,
     })
 
     -- *****************************************
@@ -208,44 +178,108 @@ function main()
     })
 
     -- Set up lspconfig.
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-    require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
-        capabilities = capabilities
-    }
+    -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    -- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
+    --     capabilities = capabilities
+    -- }
 
     -- *****************************************
-    -- 個別設定 toggleterm
+    -- 個別設定 neo-tree
     -- *****************************************
-    -- まだ使いこなせない
-    -- require("toggleterm").setup()
-    -- ノーマルモードで <Down> を押すとターミナルにフォーカスする
-    -- vim.keymap.set('n', '<Down>', ':ToggleTerm<CR>', { noremap = true, silent = true })
-    -- vim.keymap.set('t', '<Down>', [[<C-\><C-n>:ToggleTerm<CR>]], { noremap = true, silent = true })
-    -- vim.keymap.set('t', '<Up>', [[<C-\><C-n>:wincmd p<CR>]], { noremap = true, silent = true })
-
-    -- -------------------   個別設定:Fern -------------------
-    local function fern_mappings()
-        vim.keymap.set("n", "cd", "<Plug>(fern-action-cd)", { buffer = true })
-        vim.keymap.set("n", "cp", "<Plug>(fern-action-copy)", { buffer = true })
+    -- user/nerdfont.lua があれば読み込む
+    local file_path = vim.fn.stdpath("config") .. '/user/nerdfont.lua'
+    if vim.fn.filereadable(file_path) == 1 then
+        dofile(file_path)
     end
-
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "fern",
-        callback = function()
-            fern_mappings()
-        end,
+    require("neo-tree").setup({
+        default_component_configs = {
+            icon = vim.g.has_nerd_font and {
+                folder_closed = "", -- Nerd Font 使用時
+                folder_open = "",
+                folder_empty = "",
+                default = "",
+            } or {
+                folder_closed = "[+]", -- Nerd Font なしの場合
+                folder_open = "[-]",
+                folder_empty = "[ ]",
+                default = " ",
+            },
+        },
+        git_status = {
+            symbols = vim.g.has_nerd_font and {
+                added = "✚",
+                modified = "",
+                deleted = "",
+                renamed = "➜",
+                untracked = "★",
+                ignored = "◌",
+                unstaged = "✗",
+                staged = "✓",
+                conflict = "",
+            } or {
+                added = "A",
+                modified = "M",
+                deleted = "D",
+                renamed = "R",
+                untracked = "?",
+                ignored = "!",
+                unstaged = "~",
+                staged = "+",
+                conflict = "X",
+            },
+        },
+        sources = { "filesystem", "buffers", "git_status" },
+        open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
+        filesystem = {
+            filtered_items = {
+                visible = true, -- 隠しファイルを表示
+                hide_dotfiles = false,
+                hide_gitignored = false,
+            },
+            bind_to_cwd = false,
+            follow_current_file = true,
+            use_libuv_file_watcher = true,
+        },
+        window = {
+            mappings = {
+                ["l"] = function(state)
+                    local node = state.tree:get_node()
+                    if node.type == "directory" and not node:is_expanded() then
+                        -- フォルダを開く
+                        require("neo-tree.sources.filesystem").toggle_directory(state, node)
+                        -- フォルダを開いた後に最初の項目へ移動
+                        vim.defer_fn(function()
+                            vim.api.nvim_feedkeys("j", "n", false)
+                        end, 100)
+                    else
+                        -- フォルダが既に開いている場合やファイルなら開く
+                        require("neo-tree.sources.filesystem.commands").open(state)
+                    end
+                end,
+                ["h"] = "close_node",
+                ["<space>"] = "none",
+                ["Y"] = {
+                    function(state)
+                        local node = state.tree:get_node()
+                        local path = node:get_id()
+                        vim.fn.setreg("+", path, "c")
+                    end,
+                    desc = "Copy Path to Clipboard",
+                },
+                ["O"] = {
+                    function(state)
+                        require("lazy.util").open(state.tree:get_node().path, { system = true })
+                    end,
+                    desc = "Open with System Application",
+                },
+                ["P"] = { "toggle_preview", config = { use_float = false } },
+            },
+        },
     })
 
-    vim.g['fern#renderer'] = 'nerdfont'
-    vim.g['fern#default_hidden'] = 1
-    -- ------------------- / 個別設定:Fern -------------------
-
-    -- -------------------   個別設定:Telescope -------------------
-    vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>", { noremap = true, silent = true })
-    -- ------------------- / 個別設定:Telescope -------------------
-
-    -- -------------------   個別設定:Comment -------------------
+    -- *****************************************
+    -- 個別設定 Telescope
+    -- *****************************************
     require("Comment").setup({
         mappings = {
             basic = false,
@@ -259,7 +293,6 @@ function main()
 
     vim.keymap.set("v", "<C-_>", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
         { noremap = true, silent = true })
-    -- ------------------- / 個別設定:Comment -------------------
 end
 
 function prepare()

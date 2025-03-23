@@ -12,7 +12,7 @@ vim.opt.ignorecase = false -- 検索時の大文字小文字参照
 vim.opt.list = true -- タブや改行を表示 (list:表示)
 vim.opt.listchars = 'tab:>-,extends:<,trail:-,eol:↩' -- どの文字でタブや改行を表示するかを設定
 vim.opt.display:append("lastline") -- ウィンドウの最下行に表示されるテキストが、行の一部が画面に収まらなくても、可能な限り表示されるようにする
-vim.api.nvim_command("colorscheme peachpuff") -- カラー設定
+vim.api.nvim_command("colorscheme habamax") -- カラー設定
 -- MAP
 vim.keymap.set('v', '*', func.visual_search, { noremap = true, silent = true })
 vim.keymap.set('n', 'Y', 'y$', { noremap = true })
@@ -20,14 +20,10 @@ vim.keymap.set('n', 'gg', 'gg0', { noremap = true })
 vim.keymap.set('n', 'G', 'G0', { noremap = true })
 vim.keymap.set('i', 'jj', '<Esc>', { noremap = true })
 -- ウィンドウ移動
--- vim.keymap.set('n', '<C-j>', '<C-w>j', {noremap = true})
--- vim.keymap.set('n', '<C-h>', '<C-w>h', {noremap = true})
--- vim.keymap.set('n', '<C-k>', '<C-w>k', {noremap = true})
--- vim.keymap.set('n', '<C-l>', '<C-w>l', {noremap = true}) -- これが効かないため保留
-vim.keymap.set('n', '<Down>', '<C-w>j', { noremap = true })
-vim.keymap.set('n', '<Left>', '<C-w>h', { noremap = true })
-vim.keymap.set('n', '<Up>', '<C-w>k', { noremap = true })
-vim.keymap.set('n', '<Right>', '<C-w>l', { noremap = true })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true })
+vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true }) -- これが効かないため保留
 -- タブ移動
 vim.keymap.set('n', '<Tab>', '<cmd>tabnext<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<S-Tab>', '<cmd>tabprevious<CR>', { noremap = true, silent = true })
@@ -43,9 +39,21 @@ vim.keymap.set('t', '<A-l>', function() func.open_terminal(2) end, { noremap = t
 vim.keymap.set('t', '<A-h>', function() func.open_terminal(3) end, { noremap = true, silent = true })
 vim.keymap.set('t', '<A-j>', [[<C-\><C-n>:hide<CR>]], { noremap = true, silent = true })
 vim.keymap.set('t', '<A-k>', [[<C-\><C-n>:wincmd k<CR>]], { noremap = true, silent = true })
-vim.keymap.set('t', '<Up>', [[<C-\><C-n>:wincmd k<CR>]], { noremap = true, silent = true })
-vim.keymap.set('t', '<Right>', [[<C-\><C-n>:wincmd l<CR>i]], { noremap = true, silent = true })
-vim.keymap.set('t', '<Left>', [[<C-\><C-n>:wincmd h<CR>i]], { noremap = true, silent = true })
+vim.keymap.set('t', '<C-k>', [[<C-\><C-n>:wincmd k<CR>]], { noremap = true, silent = true })
+vim.keymap.set('t', '<C-l>', [[<C-\><C-n>:wincmd l<CR>i]], { noremap = true, silent = true })
+vim.keymap.set('t', '<C-h>', [[<C-\><C-n>:wincmd h<CR>i]], { noremap = true, silent = true })
+
+-- *****************************************
+-- LSP設定
+-- *****************************************
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function()
+        if vim.g.autoformat_enabled == nil or vim.g.autoformat_enabled then
+            vim.lsp.buf.format()
+        end
+    end,
+})
 
 -- *****************************************
 -- バックアップ設定

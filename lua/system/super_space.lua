@@ -5,15 +5,15 @@ local funcs = require("system.functions")
 local gitsigns = require('gitsigns')
 
 
--- Fernで開きたいパスリスト
-local fern_list = {
+-- neo-treeで開きたいパスリスト
+local neotree_list = {
     '現在のファイルのパス',
     vim.fn.stdpath("config"),
 }
 
 -- スペース2回で開くメニュー
 local next_menu = {
-    { desc = 'Fernを色々な場所で開く', method = function() funcs.fern_anywhere(fern_list) end },
+    { desc = 'Neotreeを色々な場所で開く', method = function() funcs.neotree_anywhere(neotree_list) end },
     { desc = '最近開いたファイルを開く', method = function() vim.cmd('browse oldfiles') end },
     { desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
     { desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
@@ -41,13 +41,16 @@ end
 
 -- スペース1回で開くメニュー
 local menu_list = {
-    { key = '1', desc = 'Fernを開く', method = function() vim.cmd('Fern . -reveal=% -drawer -toggle -width=25') end },
+    { key = '1', desc = 'Neotreeを開く', method = function() vim.cmd('Neotree toggle') end },
     { key = '2', desc = '[Git] 差分表示', method = function() vim.cmd('DiffviewOpen') end },
     { key = '3', desc = '[Git] 変更履歴表示', method = function() vim.cmd('DiffviewFileHistory %') end },
     { key = '4', desc = '[Git] 現在のハンクをステージング', method = gitsigns.stage_hunk },
     { key = '5', desc = '[LSP] フォーマット', method = vim.lsp.buf.format },
     { key = '6', desc = '[LSP] 診断結果を開く', method = vim.diagnostic.open_float },
     { key = '7', desc = '[LSP] ヒント', method = vim.lsp.buf.code_action },
+    { key = '8', desc = '[LSP] 定義ジャンプ', method = vim.lsp.buf.definition },
+    { key = '9', desc = '[Telescope] Grep検索', method = function() vim.cmd('Telescope live_grep') end },
+    { key = '0', desc = '[Telescope] ファイル検索', method = function() vim.cmd('Telescope find_files') end },
     { key = 'y', desc = 'クリップボードにヤンク', method = function() vim.cmd('normal! "+y') end },
     { key = 'p', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal "+P') end },
     { key = ' ', desc = '次のメニューを開く', method = open_next_menu },

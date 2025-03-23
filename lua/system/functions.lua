@@ -48,21 +48,21 @@ function mod.open_terminal(mode)
 end
 
 -- *****************************************
--- Fernをトグルする関数
+-- neo-treeをトグルする関数
 -- *****************************************
-function mod.fern_anywhere(fern_list)
+function mod.neotree_anywhere(neotree_list)
     vim.cmd('redraw')
     -- ディレクトリ選択リストの設定
-    if vim.g.fernList and not vim.tbl_isempty(vim.g.fernList) then
-        vim.list_extend(fern_list, vim.g.fernList)
+    if vim.g.neotree_list and not vim.tbl_isempty(vim.g.neotree_list) then
+        vim.list_extend(neotree_list, vim.g.neotree_list)
     end
 
-    vim.ui.select(fern_list, { prompt = "どのフォルダを開きますか？" }, function(choice, idx)
+    vim.ui.select(neotree_list, { prompt = "どのフォルダを開きますか？" }, function(choice, idx)
         if choice then
             if choice == '現在のファイルのパス' then
-                vim.cmd('Fern %:h -reveal=% -drawer -toggle -width=35')
+                vim.cmd('Neotree %:h')
             else
-                vim.cmd('Fern ' .. choice .. ' -drawer -toggle -width=35')
+                vim.cmd('Neotree ' .. choice)
             end
         else
             print("該当する選択肢がありません。")
