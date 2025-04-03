@@ -18,6 +18,11 @@ local next_menu = {
     { desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
     { desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
     { desc = '自動フォーマット設定の切り替え', method = funcs.toggle_auto_format },
+    { desc = '禅モード', method = function() vim.cmd('ZenMode') end },
+    { desc = '[Git] 現在のハンクをステージング', method = gitsigns.stage_hunk },
+    { desc = '[Git] 変更履歴表示', method = function() vim.cmd('DiffviewFileHistory %') end },
+    { desc = '[LSP] フォーマット', method = vim.lsp.buf.format },
+    { desc = '[LSP] 参照を表示', method = vim.lsp.buf.references },
 }
 
 local function open_next_menu()
@@ -43,9 +48,9 @@ end
 local menu_list = {
     { key = '1', desc = 'Neotreeを開く', method = function() vim.cmd('Neotree toggle') end },
     { key = '2', desc = '[Git] 差分表示', method = function() vim.cmd('DiffviewOpen') end },
-    { key = '3', desc = '[Git] 変更履歴表示', method = function() vim.cmd('DiffviewFileHistory %') end },
-    { key = '4', desc = '[Git] 現在のハンクをステージング', method = gitsigns.stage_hunk },
-    { key = '5', desc = '[LSP] フォーマット', method = vim.lsp.buf.format },
+    { key = '3', desc = '前のバッファに移動', method = function() vim.cmd('b#') end },
+    { key = '4', desc = '[LSP] 情報表示', method = vim.lsp.buf.hover },
+    { key = '5', desc = '[LSP] リネーム', method = vim.lsp.buf.rename },
     { key = '6', desc = '[LSP] 診断結果を開く', method = vim.diagnostic.open_float },
     { key = '7', desc = '[LSP] ヒント', method = vim.lsp.buf.code_action },
     { key = '8', desc = '[LSP] 定義ジャンプ', method = vim.lsp.buf.definition },

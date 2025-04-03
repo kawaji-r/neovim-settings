@@ -171,6 +171,21 @@ function mod.is_current_mode(modes)
 end
 
 -- *****************************************
+-- Visualモードで選択したテキストを取得
+-- *****************************************
+function mod.get_visual_selection()
+  -- 現在のバッファを取得
+  local buf = vim.api.nvim_get_current_buf()
+  -- ビジュアルモードの開始位置と終了位置のマークを取得（0-indexed）
+  local start_pos = vim.api.nvim_buf_get_mark(buf, "<")
+  local end_pos = vim.api.nvim_buf_get_mark(buf, ">")
+  -- 取得範囲: 行番号は 0-indexed に変換するために -1
+  local lines = vim.api.nvim_buf_get_text(buf, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
+  -- 複数行の場合は改行で連結
+  return table.concat(lines, "\n")
+end
+
+-- *****************************************
 -- 配列を受け取ってprint表示する
 -- *****************************************
 function mod.display_info_list(info_list)

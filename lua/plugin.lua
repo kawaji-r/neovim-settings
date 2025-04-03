@@ -43,7 +43,12 @@ function main()
                     'nvim-tree/nvim-web-devicons', -- アイコンを表示
                     "MunifTanjim/nui.nvim",
                 },
-            }
+            },
+            { 'folke/zen-mode.nvim' },   -- 禅モード
+            { 'shellRaining/hlchunk.nvim' },   -- TODO
+            { 'nvim-treesitter/nvim-treesitter-context' },   -- TODO
+            { 'Bekaboo/dropbar.nvim' },   -- TODO
+            { 'nvim-treesitter/nvim-treesitter' },
         },
         -- Configure any other settings here. See the documentation for more details.
         -- colorscheme that will be used when installing plugins.
@@ -207,6 +212,7 @@ function main()
     if vim.fn.filereadable(file_path) == 1 then
         dofile(file_path)
     end
+    local fs = require("neo-tree.sources.filesystem")
     require("neo-tree").setup({
         default_component_configs = {
             icon = vim.g.has_nerd_font and {
@@ -260,9 +266,11 @@ function main()
             mappings = {
                 ["l"] = function(state)
                     local node = state.tree:get_node()
-                    if node.type == "directory" and not node:is_expanded() then
-                        -- フォルダを開く
-                        require("neo-tree.sources.filesystem").toggle_directory(state, node)
+                    if node.type == "directory" then
+                        if not node:is_expanded() then
+                            -- フォルダを開く
+                            fs.toggle_directory(state, node)
+                        end
                         -- フォルダを開いた後に最初の項目へ移動
                         vim.defer_fn(function()
                             vim.api.nvim_feedkeys("j", "n", false)
@@ -292,8 +300,8 @@ function main()
                 ["."] = function(state)
                     local node = state.tree:get_node()
                     if node.type == "directory" then
-                        require("neo-tree.sources.filesystem").navigate(state, node.path) -- フォルダをルートに設定
-                        vim.cmd("lcd " .. node.path)                                      -- lcd でカレントディレクトリを変更
+                        fs.navigate(state, node.path) -- フォルダをルートに設定
+                        vim.cmd("tcd " .. node.path)                                      -- tcd でカレントディレクトリを変更
                         print("Changed directory to: " .. node.path)
                     else
                         print("Not a directory: " .. node.path)
@@ -311,7 +319,7 @@ function main()
                 local node = state.tree:get_node()
 
                 if node.type == "directory" then
-                    vim.cmd("lcd " .. node.path) -- カレントディレクトリを変更
+                    vim.cmd("tcd " .. node.path) -- カレントディレクトリを変更
                     print("Changed directory to: " .. node.path)
                 else
                     print("Not a directory: " .. node.path)
@@ -333,6 +341,15 @@ function main()
             basic = false,
             extra = false,
         },
+    })
+
+    -- *****************************************
+    -- 個別設定 Treesitter
+    -- *****************************************
+    require("nvim-treesitter.configs").setup({
+      ensure_installed = { "python", "lua", "javascript" },
+      highlight = { enable = true },
+      indent = { enable = true },
     })
 
     vim.keymap.set("n", "<C-_>", function()
