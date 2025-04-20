@@ -151,7 +151,7 @@ function mod.ReturnUserSelected(array)
 end
 
 -- *****************************************
--- 現在のモードが引数に指定されたモードのいずれかであるかを判定する関数
+-- 現在のモードが引数に指定されたモードのいずれかであるかを判定する
 -- *****************************************
 function mod.is_current_mode(modes)
     local current_mode = vim.fn.mode()
@@ -183,6 +183,16 @@ function mod.get_visual_selection()
   local lines = vim.api.nvim_buf_get_text(buf, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
   -- 複数行の場合は改行で連結
   return table.concat(lines, "\n")
+end
+
+-- *****************************************
+-- 現在のバッファと1つ前のバッファをDIFF表示
+-- *****************************************
+function mod.diff_with_prev()
+    vim.cmd("belowright vs | b#")
+    vim.cmd("diffthis")
+    vim.api.nvim_input("<C-w>h")
+    vim.cmd("diffthis")
 end
 
 -- *****************************************

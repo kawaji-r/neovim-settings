@@ -1,2 +1,0 @@
--- ターミナルがNerdFontに対応している場合は `nerdfont.lua` を作成してtrueにしてください
-vim.g.has_nerd_font = false

@@ -17,7 +17,7 @@ local space = require("super_space")
 -- userフォルダ配下のファイルを全て読み込み
 -- *****************************************
 -- ユーザー設定用ディレクトリのパスを設定
-local user_config_dir = vim.fn.stdpath("config") .. '/user'
+local user_config_dir = vim.fn.stdpath("config") .. '/lua/user'
 
 -- 指定ディレクトリ内の全ファイルを取得（改行区切りの文字列をテーブルに変換）
 local files = vim.fn.split(vim.fn.glob(user_config_dir .. '/*'), '\n')

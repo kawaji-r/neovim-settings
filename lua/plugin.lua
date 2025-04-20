@@ -13,29 +13,28 @@ function main()
             { 'hrsh7th/cmp-vsnip' },                 -- 補完プラグイン
             { 'hrsh7th/vim-vsnip' },                 -- 補完プラグイン
             { 'github/copilot.vim' },                -- Github Copilot
-            {
-                "CopilotC-Nvim/CopilotChat.nvim",
-                branch = "canary",
-                dependencies = {
-                    { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-                    { "nvim-lua/plenary.nvim" },  -- for curl, log wrapper
-                },
-                build = "make tiktoken",          -- Only on MacOS or Linux
-                opts = {
-                    debug = true,                 -- Enable debugging
-                    -- See Configuration section for rest
-                },
-                -- See Commands section for default commands if you want to lazy load on them
-            },                                   -- Github Copilot
             { 'tpope/vim-surround' },            -- vim surround
+            { 'bassamsdata/namu.nvim' },         -- シンボルジャンプ
+            {  -- 診断結果表示
+                "rachartier/tiny-inline-diagnostic.nvim",
+                event = "VeryLazy", -- Or `LspAttach`
+                priority = 1000, -- needs to be loaded in first
+                config = function()
+                    require('tiny-inline-diagnostic').setup()
+                    vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
+                end
+            },
             { 'nvim-telescope/telescope.nvim' }, -- ファイル検索
             { 'numToStr/Comment.nvim' },         -- コメントアウト
             { 'f-person/git-blame.nvim' },       -- カーソル行の編集日時などを表示
             { 'akinsho/toggleterm.nvim' },       -- ターミナル強化 -- まだ使いこなせない
             { 'sindrets/diffview.nvim' },        -- Gitビューワー
             { 'lewis6991/gitsigns.nvim' },       -- Gitクライアント
+            { 'OXY2DEV/markview.nvim' }, -- マークダウンプレビュー
+            -- { 'MeanderingProgrammer/render-markdown.nvim' }, -- マークダウンプレビュー
             { 'nvim-lualine/lualine.nvim' },     -- ステータスライン
             { 'jdkanani/vim-material-theme' },   -- カラースキーム
+            { 'folke/tokyonight.nvim' },   -- カラースキーム
             {                                    -- ファイラー
                 "nvim-neo-tree/neo-tree.nvim",
                 dependencies = {
@@ -45,10 +44,22 @@ function main()
                 },
             },
             { 'folke/zen-mode.nvim' },   -- 禅モード
-            { 'shellRaining/hlchunk.nvim' },   -- TODO
-            { 'nvim-treesitter/nvim-treesitter-context' },   -- TODO
-            { 'Bekaboo/dropbar.nvim' },   -- TODO
+            {  -- スクロールバー
+                'petertriho/nvim-scrollbar',
+                config = function()
+                    require("scrollbar").setup({})
+                end
+            },
+            {  -- 開始と終了の紐付け
+                "shellRaining/hlchunk.nvim",
+                event = { "BufReadPre", "BufNewFile" },
+                config = function()
+                    require("hlchunk").setup({})
+                end
+            },
+            { 'nvim-treesitter/nvim-treesitter-context' },   -- TreeSitter
             { 'nvim-treesitter/nvim-treesitter' },
+            { 'Bekaboo/dropbar.nvim' },   -- TODO
         },
         -- Configure any other settings here. See the documentation for more details.
         -- colorscheme that will be used when installing plugins.
@@ -215,40 +226,21 @@ function main()
     local fs = require("neo-tree.sources.filesystem")
     require("neo-tree").setup({
         default_component_configs = {
-            icon = vim.g.has_nerd_font and {
-                folder_closed = "", -- Nerd Font 使用時
-                folder_open = "",
-                folder_empty = "",
-                default = "",
-            } or {
-                folder_closed = "[+]", -- Nerd Font なしの場合
-                folder_open = "[-]",
-                folder_empty = "[ ]",
-                default = " ",
-            },
+            folder_closed = "", -- Nerd Font 使用時
+            folder_open = "",
+            folder_empty = "",
+            default = "",
         },
         git_status = {
-            symbols = vim.g.has_nerd_font and {
-                added = "✚",
-                modified = "",
-                deleted = "",
-                renamed = "➜",
-                untracked = "★",
-                ignored = "◌",
-                unstaged = "✗",
-                staged = "✓",
-                conflict = "",
-            } or {
-                added = "A",
-                modified = "M",
-                deleted = "D",
-                renamed = "R",
-                untracked = "?",
-                ignored = "!",
-                unstaged = "~",
-                staged = "+",
-                conflict = "X",
-            },
+            added = "✚",
+            modified = "",
+            deleted = "",
+            renamed = "➜",
+            untracked = "★",
+            ignored = "◌",
+            unstaged = "✗",
+            staged = "✓",
+            conflict = "",
         },
         sources = { "filesystem", "buffers", "git_status" },
         open_files_do_not_replace_types = { "terminal", "Trouble", "trouble", "qf", "Outline" },
@@ -308,6 +300,7 @@ function main()
                     end
                 end,
                 ["/"] = "noop", -- `/` のデフォルト検索を無効化
+                ["z"] = "noop", -- zzを使いたい
             },
         },
     })
@@ -329,12 +322,7 @@ function main()
     })
 
     -- *****************************************
-    -- 個別設定 Copilot
-    -- *****************************************
-    require('plugin.CopilotChat')
-
-    -- *****************************************
-    -- 個別設定 Telescope
+    -- 個別設定 Comment
     -- *****************************************
     require("Comment").setup({
         mappings = {
@@ -342,6 +330,12 @@ function main()
             extra = false,
         },
     })
+    vim.keymap.set("n", "<C-_>", function()
+        require("Comment.api").toggle.linewise.current()
+    end, { noremap = true, silent = true })
+    vim.keymap.set("v", "<C-_>"
+        , "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>"
+        , { noremap = true, silent = true })
 
     -- *****************************************
     -- 個別設定 Treesitter
@@ -352,12 +346,6 @@ function main()
       indent = { enable = true },
     })
 
-    vim.keymap.set("n", "<C-_>", function()
-        require("Comment.api").toggle.linewise.current()
-    end, { noremap = true, silent = true })
-
-    vim.keymap.set("v", "<C-_>", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-        { noremap = true, silent = true })
 end
 
 function prepare()

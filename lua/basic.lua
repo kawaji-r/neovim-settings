@@ -18,7 +18,7 @@ vim.keymap.set('v', '*', func.visual_search, { noremap = true, silent = true })
 vim.keymap.set('n', 'Y', 'y$', { noremap = true })
 vim.keymap.set('n', 'gg', 'gg0', { noremap = true })
 vim.keymap.set('n', 'G', 'G0', { noremap = true })
-vim.keymap.set('i', 'jj', '<Esc>', { noremap = true })
+vim.keymap.set('i', '@@', '<Esc>', { noremap = true })
 -- ウィンドウ移動
 vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true })
 vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true })
@@ -40,12 +40,14 @@ vim.keymap.set('t', '<A-h>', function() func.open_terminal(3) end, { noremap = t
 vim.keymap.set('t', '<A-j>', [[<C-\><C-n>:hide<CR>]], { noremap = true, silent = true })
 vim.keymap.set('t', '<A-k>', [[<C-\><C-n>:wincmd k<CR>]], { noremap = true, silent = true })
 vim.keymap.set('t', '<C-k>', [[<C-\><C-n>:wincmd k<CR>]], { noremap = true, silent = true })
-vim.keymap.set('t', '<C-l>', [[<C-\><C-n>:wincmd l<CR>i]], { noremap = true, silent = true })
-vim.keymap.set('t', '<C-h>', [[<C-\><C-n>:wincmd h<CR>i]], { noremap = true, silent = true })
+vim.keymap.set('t', '<C-l>', [[<C-\><C-n>:wincmd l<CR>]], { noremap = true, silent = true })
+vim.keymap.set('t', '<C-h>', [[<C-\><C-n>:wincmd h<CR>]], { noremap = true, silent = true })
+vim.keymap.set('t', '@@', [[<C-\><C-n>]], { noremap = true, silent = true })
 
 -- *****************************************
 -- LSP設定
 -- *****************************************
+-- 保存時自動フォーマット
 vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*",
     callback = function()
