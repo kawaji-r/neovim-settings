@@ -76,9 +76,9 @@ end
 -- ****************************
 function mod.toggle_auto_format()
     if vim.g.autoformat_enabled then
-      vim.g["prettier#autoformat"] = 0
+        vim.g["prettier#autoformat"] = 0
     else
-      vim.g["prettier#autoformat"] = 1
+        vim.g["prettier#autoformat"] = 1
     end
     vim.g.autoformat_enabled = not vim.g.autoformat_enabled
     print("\nAutoformat: " .. (vim.g.autoformat_enabled and "ON" or "OFF"))
@@ -179,15 +179,15 @@ end
 -- Visualモードで選択したテキストを取得
 -- *****************************************
 function mod.get_visual_selection()
-  -- 現在のバッファを取得
-  local buf = vim.api.nvim_get_current_buf()
-  -- ビジュアルモードの開始位置と終了位置のマークを取得（0-indexed）
-  local start_pos = vim.api.nvim_buf_get_mark(buf, "<")
-  local end_pos = vim.api.nvim_buf_get_mark(buf, ">")
-  -- 取得範囲: 行番号は 0-indexed に変換するために -1
-  local lines = vim.api.nvim_buf_get_text(buf, start_pos[1]-1, start_pos[2], end_pos[1]-1, end_pos[2]+1, {})
-  -- 複数行の場合は改行で連結
-  return table.concat(lines, "\n")
+    -- 現在のバッファを取得
+    local buf = vim.api.nvim_get_current_buf()
+    -- ビジュアルモードの開始位置と終了位置のマークを取得（0-indexed）
+    local start_pos = vim.api.nvim_buf_get_mark(buf, "<")
+    local end_pos = vim.api.nvim_buf_get_mark(buf, ">")
+    -- 取得範囲: 行番号は 0-indexed に変換するために -1
+    local lines = vim.api.nvim_buf_get_text(buf, start_pos[1] - 1, start_pos[2], end_pos[1] - 1, end_pos[2] + 1, {})
+    -- 複数行の場合は改行で連結
+    return table.concat(lines, "\n")
 end
 
 -- *****************************************

@@ -13,7 +13,7 @@ vim.opt.list = true -- タブや改行を表示 (list:表示)
 vim.opt.listchars = 'tab:>-,extends:<,trail:-,eol:↩' -- どの文字でタブや改行を表示するかを設定
 vim.opt.display:append("lastline") -- ウィンドウの最下行に表示されるテキストが、行の一部が画面に収まらなくても、可能な限り表示されるようにする
 vim.g.autoformat_enabled = true
-vim.api.nvim_command("colorscheme material-theme") -- カラー設定
+-- vim.api.nvim_command("colorscheme material-theme") -- カラー設定
 -- MAP
 vim.keymap.set('v', '*', func.visual_search, { noremap = true, silent = true })
 vim.keymap.set('n', 'Y', 'y$', { noremap = true })
