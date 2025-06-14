@@ -75,6 +75,11 @@ end
 -- 自動フォーマットをON/OFF切り替える
 -- ****************************
 function mod.toggle_auto_format()
+    if vim.g.autoformat_enabled then
+      vim.g["prettier#autoformat"] = 0
+    else
+      vim.g["prettier#autoformat"] = 1
+    end
     vim.g.autoformat_enabled = not vim.g.autoformat_enabled
     print("\nAutoformat: " .. (vim.g.autoformat_enabled and "ON" or "OFF"))
 end

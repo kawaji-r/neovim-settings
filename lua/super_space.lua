@@ -14,7 +14,7 @@ local neotree_list = {
 -- スペース2回で開くメニュー
 local next_menu = {
     { desc = 'Neotreeを色々な場所で開く', method = function() funcs.neotree_anywhere(neotree_list) end },
-    { desc = '最近開いたファイルを開く', method = function() vim.cmd('browse oldfiles') end },
+    { desc = '最近開いたファイルを開く', method = function() vim.cmd('Telescope oldfiles') end },
     { desc = 'Gitsignsを開く', method = function() vim.cmd('Gitsigns') end },
     { desc = 'Telescopeを開く', method = function() vim.cmd('Telescope') end },
     { desc = '自動フォーマット設定の切り替え', method = funcs.toggle_auto_format },
@@ -58,6 +58,7 @@ local menu_list = {
     { key = '8', desc = '禅モード', method = function() vim.cmd('ZenMode') end },
     { key = '9', desc = '[Telescope] Grep検索', method = function() vim.cmd('Telescope live_grep') end },
     { key = '0', desc = '[Telescope] ファイル検索', method = function() vim.cmd('Telescope find_files') end },
+    { key = 'b', desc = '[Telescope] バッファ', method = function() vim.cmd('Telescope buffers') end },
     { key = 'y', desc = 'クリップボードにヤンク', method = function() vim.cmd('normal! "+y') end },
     { key = 'p', desc = 'クリップボードを貼り付け', method = function() vim.cmd('normal "+P') end },
     { key = ' ', desc = '次のメニューを開く', method = open_next_menu },

@@ -30,8 +30,8 @@ function main()
             { 'akinsho/toggleterm.nvim' },       -- ターミナル強化 -- まだ使いこなせない
             { 'sindrets/diffview.nvim' },        -- Gitビューワー
             { 'lewis6991/gitsigns.nvim' },       -- Gitクライアント
-            { 'OXY2DEV/markview.nvim' }, -- マークダウンプレビュー
-            -- { 'MeanderingProgrammer/render-markdown.nvim' }, -- マークダウンプレビュー
+            -- { 'OXY2DEV/markview.nvim' }, -- マークダウンプレビュー
+            { 'MeanderingProgrammer/render-markdown.nvim' }, -- マークダウンプレビュー
             { 'nvim-lualine/lualine.nvim' },     -- ステータスライン
             { 'jdkanani/vim-material-theme' },   -- カラースキーム
             { 'folke/tokyonight.nvim' },   -- カラースキーム
@@ -60,6 +60,7 @@ function main()
             { 'nvim-treesitter/nvim-treesitter-context' },   -- TreeSitter
             { 'nvim-treesitter/nvim-treesitter' },
             { 'Bekaboo/dropbar.nvim' },   -- TODO
+            require("plugins/prettier").plugin_spec(),
         },
         -- Configure any other settings here. See the documentation for more details.
         -- colorscheme that will be used when installing plugins.
@@ -319,6 +320,16 @@ function main()
                 end
             end, { buffer = true, noremap = true, silent = true })
         end,
+    })
+
+    -- *****************************************
+    -- 個別設定 Markdown
+    -- *****************************************
+    require('render-markdown').setup({
+        anti_conceal = {
+            -- This enables hiding any added text on the line the cursor is on.
+            enabled = false,
+        },
     })
 
     -- *****************************************
