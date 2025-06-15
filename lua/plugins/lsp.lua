@@ -14,11 +14,12 @@ function M.plugin_spec()
             config = function()
                 require("mason-lspconfig").setup {
                     ensure_installed = {
-                        "lua_ls", -- Lua 言語サーバー
-                        "rust_analyzer", -- Rust 言語サーバー
-                        "pyright", -- Python 言語サーバー
-                        "tsserver", -- TypeScript/JavaScript 言語サーバー
+                        "lua_ls",                  -- Lua 言語サーバー
+                        "rust_analyzer",           -- Rust 言語サーバー
+                        "pyright",                 -- Python 言語サーバー
+                        "tsserver",                -- TypeScript/JavaScript 言語サーバー
                     },
+                    automatic_installation = true, -- 自動インストールを有効化
                 }
             end
         }
