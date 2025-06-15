@@ -1,5 +1,5 @@
 local M = {}
- 
+
 function M.plugin_spec()
     return {
         { "neovim/nvim-lspconfig" },   -- LSP
@@ -9,18 +9,20 @@ function M.plugin_spec()
                 require("mason").setup()
             end
         },
-        { "williamboman/mason-lspconfig.nvim",
+        {
+            "williamboman/mason-lspconfig.nvim", -- lspconfigとセット
             config = function()
-            require("mason-lspconfig").setup()
-            require("mason-lspconfig").setup_handlers {
-                function(server_name)
-                require("lspconfig")[server_name].setup {}
-            end,
+                require("mason-lspconfig").setup {
+                    ensure_installed = {
+                        "lua_ls", -- Lua 言語サーバー
+                        "rust_analyzer", -- Rust 言語サーバー
+                        "pyright", -- Python 言語サーバー
+                        "tsserver", -- TypeScript/JavaScript 言語サーバー
+                    },
+                }
+            end
         }
-        end
-} -- lspconfigとセット
     }
 end
-
 
 return M
