@@ -16,14 +16,14 @@ function main()
             require("plugins.treesitter").plugin_spec(),
             require("plugins.scrollbar").plugin_spec(),
             require("plugins.hlchunk").plugin_spec(),
-            { 'f-person/git-blame.nvim' },                     -- コメントアウト
-            { 'akinsho/toggleterm.nvim' },                   -- ターミナル強化 -- まだ使いこなせない
-            { 'sindrets/diffview.nvim' },                    -- Gitビューワー
-            { 'nvim-lualine/lualine.nvim' },                 -- ステータスライン
-            { 'jdkanani/vim-material-theme' },               -- カラースキーム
-            { 'folke/tokyonight.nvim' },                     -- カラースキーム
-            { 'folke/zen-mode.nvim' }, -- 禅モード
-            { 'Bekaboo/dropbar.nvim' },                    -- TODO
+            require("plugins.zen").plugin_spec(),
+            { 'f-person/git-blame.nvim' },     -- コメントアウト
+            { 'akinsho/toggleterm.nvim' },     -- ターミナル強化 -- まだ使いこなせない
+            { 'sindrets/diffview.nvim' },      -- Gitビューワー
+            { 'nvim-lualine/lualine.nvim' },   -- ステータスライン
+            { 'jdkanani/vim-material-theme' }, -- カラースキーム
+            { 'folke/tokyonight.nvim' },       -- カラースキーム
+            { 'Bekaboo/dropbar.nvim' },        -- TODO
         },
         install = { colorscheme = { "habamax" } },
         checker = { enabled = true },
