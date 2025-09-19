@@ -10,19 +10,19 @@ function M.plugin_spec()
             end
         },
         {
-            "williamboman/mason-lspconfig.nvim",
+            "williamboman/mason-lspconfig.nvim", -- lspconfigとセット
             config = function()
                 require("mason-lspconfig").setup {
                     ensure_installed = {
-                        "marksman",
-                        "lua_ls",
-                        "ts_ls",
-                        "rust_analyzer",
-                    },                       -- 必要なサーバー名を列挙
-                    automatic_enable = true, -- 既定でオン (インストール済みサーバーを LSP クライアントとして起動)
+                        "lua_ls",                  -- Lua 言語サーバー
+                        "rust_analyzer",           -- Rust 言語サーバー
+                        "pyright",                 -- Python 言語サーバー
+                        "tsserver",                -- TypeScript/JavaScript 言語サーバー
+                    },
+                    automatic_installation = true, -- 自動インストールを有効化
                 }
             end
-        } -- lspconfigとセット
+        }
     }
 end
 
