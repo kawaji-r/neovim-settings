@@ -74,4 +74,4 @@ vim.opt.undodir = backup_dir
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
 -- 日本語の幅がおかしいため、設定
-vim.opt.ambiwidth = 'single'
+-- vim.opt.ambiwidth = 'double'
