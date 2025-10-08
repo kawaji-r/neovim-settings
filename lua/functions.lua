@@ -156,6 +156,33 @@ function mod.ReturnUserSelected(array)
 end
 
 -- *****************************************
+-- テキストをクリップボードにコピーする
+-- *****************************************
+function mod.open_copy_menu()
+    vim.cmd('redraw')
+
+    local copy_menu = {
+        { desc = '文', method = function() vim.cmd('normal! "+yiW') end },
+        { desc = '行', method = function() vim.cmd('normal! 0"+y$') end },
+        { desc = 'ファイル全体', method = function() vim.cmd('normal! gg"+yG') end },
+    }
+
+    local select_opts = {
+        prompt = "Copy Menu",
+        format_item = function(item)
+            return item.desc
+        end,
+    }
+    vim.ui.select(copy_menu, select_opts, function(choice, idx)
+        if choice then
+            choice.method()
+        else
+            print("該当する選択肢がありません。")
+        end
+    end)
+end
+
+-- *****************************************
 -- 現在のモードが引数に指定されたモードのいずれかであるかを判定する
 -- *****************************************
 function mod.is_current_mode(modes)

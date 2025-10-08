@@ -24,6 +24,8 @@ local next_menu = {
     { desc = '[LSP] フォーマット', method = vim.lsp.buf.format },
     { desc = '[LSP] 参照を表示', method = vim.lsp.buf.references },
     { desc = '[LSP] リネーム', method = vim.lsp.buf.rename },
+    { desc = '[LSP] 診断結果を開く (open_float)', method = vim.diagnostic.open_float },
+    { desc = '[LSP] ヒント (code_action)', method = vim.lsp.buf.code_action },
     { desc = '現在のバッファと1つ前のバッファをDIFF表示', method = funcs.diff_with_prev },
 }
 
@@ -52,8 +54,7 @@ local menu_list = {
     { key = '2', desc = '[Git] 差分表示', method = function() vim.cmd('DiffviewOpen') end },
     { key = '3', desc = '前のバッファに移動', method = function() vim.cmd('b#') end },
     { key = '4', desc = '[LSP] 情報表示 (hover)', method = vim.lsp.buf.hover },
-    { key = '5', desc = '[LSP] 診断結果を開く (open_float)', method = vim.diagnostic.open_float },
-    { key = '6', desc = '[LSP] ヒント (code_action)', method = vim.lsp.buf.code_action },
+    { key = '5', desc = 'コピーを選択', method = funcs.open_copy_menu },
     { key = '7', desc = '[LSP] 定義ジャンプ (definition)', method = vim.lsp.buf.definition },
     { key = '8', desc = '禅モード', method = function() vim.cmd('ZenMode') end },
     { key = '9', desc = '[Telescope] Grep検索', method = function() vim.cmd('Telescope live_grep') end },
