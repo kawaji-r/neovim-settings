@@ -26,6 +26,7 @@ local next_menu = {
     { desc = '[LSP] リネーム', method = vim.lsp.buf.rename },
     { desc = '[LSP] 診断結果を開く (open_float)', method = vim.diagnostic.open_float },
     { desc = '[LSP] ヒント (code_action)', method = vim.lsp.buf.code_action },
+    { desc = '[TEST] カーソル上のテスト実行', method = function() vim.cmd('TestNearest') end },
     { desc = '現在のバッファと1つ前のバッファをDIFF表示', method = funcs.diff_with_prev },
 }
 

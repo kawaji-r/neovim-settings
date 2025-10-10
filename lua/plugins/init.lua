@@ -3,6 +3,7 @@ function main()
         spec = {
             require("plugins.lsp").plugin_spec(),
             require("plugins.lsp_cmp").plugin_spec(),
+            require("plugins.testing").plugin_spec(),
             require("plugins.copilot").plugin_spec(),
             require("plugins.surround").plugin_spec(),
             require("plugins.prettier").plugin_spec(),
